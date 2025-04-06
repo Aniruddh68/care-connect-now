@@ -36,7 +36,7 @@ const mockDoctors: Doctor[] = [
     name: 'Dr. Sarah Johnson',
     specialty: 'Cardiologist',
     imageUrl: 'https://randomuser.me/api/portraits/women/45.jpg',
-    hospital: 'City Medical Center',
+    hospital: 'Bhopal Medical Center',
     distance: '1.2 miles',
     availableToday: true,
     rating: 4.8
@@ -46,7 +46,7 @@ const mockDoctors: Doctor[] = [
     name: 'Dr. Michael Chen',
     specialty: 'Orthopedic Surgeon',
     imageUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
-    hospital: 'General Hospital',
+    hospital: 'AIIMS Bhopal',
     distance: '0.8 miles',
     availableToday: true,
     rating: 4.7
@@ -56,7 +56,7 @@ const mockDoctors: Doctor[] = [
     name: 'Dr. Rebecca Martinez',
     specialty: 'Pediatrician',
     imageUrl: 'https://randomuser.me/api/portraits/women/63.jpg',
-    hospital: 'Children\'s Hospital',
+    hospital: 'Bhopal Children\'s Hospital',
     distance: '2.4 miles',
     availableToday: false,
     nextAvailable: 'Next available: Tomorrow',
@@ -67,7 +67,7 @@ const mockDoctors: Doctor[] = [
     name: 'Dr. James Wilson',
     specialty: 'Neurologist',
     imageUrl: 'https://randomuser.me/api/portraits/men/52.jpg',
-    hospital: 'University Hospital',
+    hospital: 'Bhopal University Hospital',
     distance: '3.1 miles',
     availableToday: false,
     nextAvailable: 'Next available: Friday',
@@ -78,7 +78,7 @@ const mockDoctors: Doctor[] = [
     name: 'Dr. Emily Patel',
     specialty: 'Dermatologist',
     imageUrl: 'https://randomuser.me/api/portraits/women/37.jpg',
-    hospital: 'Skin & Care Clinic',
+    hospital: 'Bhopal Skin & Care Clinic',
     distance: '1.7 miles',
     availableToday: true,
     rating: 4.9
@@ -96,10 +96,10 @@ const FindDoctorPage: React.FC = () => {
   };
   
   return (
-    <MainLayout title="Find a Doctor">
+    <MainLayout title="Find a Doctor in Bhopal">
       <div className="max-w-lg mx-auto px-4 pb-20 pt-4">
         <div className="mb-6 sticky top-16 bg-care-background pt-2 pb-2 z-10">
-          <Searchbar onSearch={handleSearch} />
+          <Searchbar onSearch={handleSearch} placeholder="Search for doctors in Bhopal..." />
           
           <div className="mt-4">
             <h3 className="text-sm text-care-muted mb-1">Specialty</h3>
@@ -132,7 +132,7 @@ const FindDoctorPage: React.FC = () => {
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-care-dark">
-              {mockDoctors.length} Doctors Found
+              {mockDoctors.length} Doctors Found in Bhopal
             </h2>
           </div>
           

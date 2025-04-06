@@ -19,41 +19,41 @@ interface Hospital {
 const mockHospitals: Hospital[] = [
   {
     id: '1',
-    name: 'City Medical Center',
-    address: '123 Main Street, City',
+    name: 'Bhopal Medical Center',
+    address: '123 M.P. Nagar, Bhopal',
     distance: '1.2 miles',
     availableDoctors: 5,
-    phone: '(555) 123-4567',
+    phone: '(0755) 123-4567',
     open: true,
     hours: 'Open 24 hours'
   },
   {
     id: '2',
-    name: 'General Hospital',
-    address: '456 Oak Avenue, City',
+    name: 'AIIMS Bhopal',
+    address: 'Saket Nagar, Bhopal',
     distance: '0.8 miles',
     availableDoctors: 3,
-    phone: '(555) 987-6543',
+    phone: '(0755) 987-6543',
     open: true,
     hours: 'Open 24 hours'
   },
   {
     id: '3',
-    name: 'University Hospital',
-    address: '789 College Blvd, City',
+    name: 'Bhopal University Hospital',
+    address: '789 New Market, Bhopal',
     distance: '3.1 miles',
     availableDoctors: 8,
-    phone: '(555) 456-7890',
+    phone: '(0755) 456-7890',
     open: true,
     hours: 'Open 24 hours'
   },
   {
     id: '4',
-    name: 'Children\'s Hospital',
-    address: '234 Elm Street, City',
+    name: 'Bhopal Children\'s Hospital',
+    address: '234 TT Nagar, Bhopal',
     distance: '2.4 miles',
     availableDoctors: 4,
-    phone: '(555) 234-5678',
+    phone: '(0755) 234-5678',
     open: true,
     hours: 'Open 24 hours'
   }
@@ -71,15 +71,15 @@ const NearbyPage: React.FC = () => {
   const [hospitals] = useState<Hospital[]>(sortedHospitals);
   
   return (
-    <MainLayout title="Nearby Hospitals">
+    <MainLayout title="Nearby Hospitals in Bhopal">
       <div className="max-w-lg mx-auto px-4 pb-20 pt-4">
         <div className="mb-6">
           <div className="aspect-video bg-gray-200 rounded-xl mb-4 flex items-center justify-center">
-            <p className="text-care-muted">Map would appear here</p>
+            <p className="text-care-muted">Map of Bhopal would appear here</p>
           </div>
           
           <p className="text-care-muted text-sm mb-1">
-            Showing hospitals near your current location
+            Showing hospitals near your location in Bhopal
           </p>
           <button className="text-care-primary text-sm font-medium">
             Change location
@@ -88,7 +88,7 @@ const NearbyPage: React.FC = () => {
         
         <div>
           <h2 className="text-xl font-bold text-care-dark mb-4">
-            Nearby Hospitals ({hospitals.length})
+            Nearby Hospitals in Bhopal ({hospitals.length})
           </h2>
           
           {hospitals.map(hospital => (
@@ -117,7 +117,7 @@ const NearbyPage: React.FC = () => {
               
               <div className="flex gap-4 mt-3">
                 <button 
-                  onClick={() => alert('This would navigate to the hospital')}
+                  onClick={() => alert('This would navigate to the hospital in Bhopal')}
                   className="flex-1 primary-button py-2 flex items-center justify-center"
                 >
                   <MapPinIcon className="mr-2 h-4 w-4" />

@@ -12,7 +12,7 @@ const mockEmergencyDoctors: Doctor[] = [
     name: 'Dr. Sarah Johnson',
     specialty: 'Emergency Medicine',
     imageUrl: 'https://randomuser.me/api/portraits/women/45.jpg',
-    hospital: 'City Medical Center',
+    hospital: 'Bhopal Medical Center',
     distance: '1.2 miles',
     availableToday: true,
     rating: 4.8
@@ -22,7 +22,7 @@ const mockEmergencyDoctors: Doctor[] = [
     name: 'Dr. Michael Chen',
     specialty: 'Emergency Medicine',
     imageUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
-    hospital: 'General Hospital',
+    hospital: 'AIIMS Bhopal',
     distance: '0.8 miles',
     availableToday: true,
     rating: 4.7
@@ -45,27 +45,27 @@ const EmergencyPage: React.FC = () => {
   }, []);
   
   const handleCallEmergency = () => {
-    alert('This would call emergency services (911/112/etc)');
+    alert('This would call emergency services in Bhopal (108)');
   };
   
   return (
-    <MainLayout hideNav title="Emergency Care">
+    <MainLayout hideNav title="Emergency Care in Bhopal">
       <div className="max-w-lg mx-auto px-4 pb-6 pt-4">
         <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
           <h2 className="text-lg font-bold text-red-700 mb-2">Emergency Information</h2>
           <p className="text-red-700 mb-4">
-            If this is a life-threatening emergency, please call emergency services immediately.
+            If this is a life-threatening emergency in Bhopal, please call emergency services immediately.
           </p>
           <button 
             onClick={handleCallEmergency}
             className="w-full py-3 bg-red-600 text-white font-bold rounded-lg flex items-center justify-center"
           >
             <Phone className="mr-2 h-5 w-5" />
-            Call Emergency Services
+            Call Emergency Services (108)
           </button>
         </div>
         
-        <h2 className="text-xl font-bold text-care-dark mb-4">Nearest Emergency Care</h2>
+        <h2 className="text-xl font-bold text-care-dark mb-4">Nearest Emergency Care in Bhopal</h2>
         
         {isLoading ? (
           <div className="bg-white rounded-xl shadow p-6 mb-4 text-center">
@@ -75,21 +75,21 @@ const EmergencyPage: React.FC = () => {
               <div className="h-4 bg-slate-200 rounded w-1/2 mb-4"></div>
               <div className="h-10 bg-slate-200 rounded w-1/2"></div>
             </div>
-            <p className="mt-4 text-care-muted">Locating nearest emergency care...</p>
+            <p className="mt-4 text-care-muted">Locating nearest emergency care in Bhopal...</p>
           </div>
         ) : nearestDoctor ? (
           <div className="mb-6">
             <DoctorCard doctor={nearestDoctor} showBookButton={false} />
             <div className="flex gap-4 mt-2">
               <button 
-                onClick={() => alert('This would open maps navigation')}
+                onClick={() => alert('This would open maps navigation to the hospital in Bhopal')}
                 className="flex-1 primary-button flex items-center justify-center"
               >
                 <MapPinIcon className="mr-2 h-5 w-5" />
                 Navigate
               </button>
               <button 
-                onClick={() => alert('This would call the doctor')}
+                onClick={() => alert('This would call the doctor in Bhopal')}
                 className="flex-1 secondary-button flex items-center justify-center"
               >
                 <Phone className="mr-2 h-5 w-5" />
@@ -99,12 +99,12 @@ const EmergencyPage: React.FC = () => {
           </div>
         ) : (
           <div className="bg-white rounded-xl shadow p-6 mb-4 text-center">
-            <p className="text-care-muted">No emergency providers found nearby.</p>
+            <p className="text-care-muted">No emergency providers found nearby in Bhopal.</p>
           </div>
         )}
         
         <div className="mb-6">
-          <h3 className="text-lg font-bold text-care-dark mb-3">Other Emergency Options</h3>
+          <h3 className="text-lg font-bold text-care-dark mb-3">Other Emergency Options in Bhopal</h3>
           {mockEmergencyDoctors.filter(d => d.id !== nearestDoctor?.id).map(doctor => (
             <DoctorCard key={doctor.id} doctor={doctor} showBookButton={false} />
           ))}

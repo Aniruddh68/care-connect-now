@@ -25,7 +25,7 @@ const mockDoctors: Doctor[] = [
     name: 'Dr. Sarah Johnson',
     specialty: 'Cardiologist',
     imageUrl: 'https://randomuser.me/api/portraits/women/45.jpg',
-    hospital: 'City Medical Center',
+    hospital: 'Bhopal Medical Center',
     distance: '1.2 miles',
     availableToday: true,
     rating: 4.8
@@ -35,7 +35,7 @@ const mockDoctors: Doctor[] = [
     name: 'Dr. Michael Chen',
     specialty: 'Orthopedic Surgeon',
     imageUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
-    hospital: 'General Hospital',
+    hospital: 'AIIMS Bhopal',
     distance: '0.8 miles',
     availableToday: true,
     rating: 4.7
@@ -45,7 +45,7 @@ const mockDoctors: Doctor[] = [
     name: 'Dr. Rebecca Martinez',
     specialty: 'Pediatrician',
     imageUrl: 'https://randomuser.me/api/portraits/women/63.jpg',
-    hospital: 'Children\'s Hospital',
+    hospital: 'Bhopal Children\'s Hospital',
     distance: '2.4 miles',
     availableToday: false,
     nextAvailable: 'Next available: Tomorrow',
@@ -67,6 +67,11 @@ const HomePage: React.FC = () => {
         <div className="mb-6">
           <EmergencyButton className="w-full mb-6" />
           
+          <div className="mb-4">
+            <h2 className="text-lg font-bold text-care-dark">Find doctors in Bhopal</h2>
+            <p className="text-care-muted text-sm">Discover the best healthcare professionals near you</p>
+          </div>
+          
           <Searchbar onSearch={handleSearch} />
           
           <div className="mt-4">
@@ -80,7 +85,7 @@ const HomePage: React.FC = () => {
         
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-care-dark">Available Now</h2>
+            <h2 className="text-xl font-bold text-care-dark">Available Now in Bhopal</h2>
             <Link to="/find" className="text-care-primary font-medium text-sm">View All</Link>
           </div>
           
@@ -97,7 +102,7 @@ const HomePage: React.FC = () => {
             className="bg-white rounded-xl p-4 shadow text-center card-hover flex flex-col items-center justify-center"
           >
             <MapPinIcon className="h-8 w-8 text-care-primary mb-2" />
-            <span className="font-medium">Nearby Hospitals</span>
+            <span className="font-medium">Hospitals in Bhopal</span>
           </Link>
           
           <Link 

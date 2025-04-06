@@ -13,7 +13,7 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ 
   children, 
   hideNav = false,
-  title = "Care Connect"
+  title = "Care Connect Bhopal"
 }) => {
   return (
     <div className="flex flex-col min-h-screen bg-care-background">
