@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,19 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Care Connect custom colors
+				care: {
+					'primary': '#0EA5E9', // bright blue
+					'secondary': '#38BDF8', // light blue
+					'accent': '#F97316', // orange for emergency/important actions
+					'background': '#F8FAFC', // light background
+					'dark': '#0F172A',  // dark blue/black for text
+					'success': '#10B981', // green for success states
+					'error': '#EF4444', // red for errors
+					'warning': '#F59E0B', // amber for warnings
+					'info': '#3B82F6', // blue for information
+					'muted': '#94A3B8', // slate for muted text
 				}
 			},
 			borderRadius: {
@@ -84,11 +98,16 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-soft': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.8' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-soft': 'pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
 			}
 		}
 	},
