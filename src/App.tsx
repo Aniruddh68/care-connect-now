@@ -12,6 +12,7 @@ import Appointments from "./pages/Appointments";
 import Nearby from "./pages/Nearby";
 import Emergency from "./pages/Emergency";
 import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 // Create a new QueryClient instance
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/nearby" element={<Nearby />} />
             <Route path="/emergency" element={<Emergency />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/profile" element={<Profile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
