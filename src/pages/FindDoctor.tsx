@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import Searchbar from '@/components/common/Searchbar';
@@ -17,6 +16,10 @@ const specialties = [
   { id: 'psych', label: 'Psychiatry' },
   { id: 'pulmo', label: 'Pulmonology' },
   { id: 'gastro', label: 'Gastroenterology' },
+  { id: 'ophthal', label: 'Ophthalmology' },
+  { id: 'endo', label: 'Endocrinology' },
+  { id: 'uro', label: 'Urology' },
+  { id: 'nephro', label: 'Nephrology' },
 ];
 
 const availability = [
@@ -137,6 +140,214 @@ const mockDoctors: Doctor[] = [
     distance: '2.7 miles',
     availableToday: true,
     rating: 4.5
+  },
+  {
+    id: '11',
+    name: 'Dr. Lisa Johnson',
+    specialty: 'Urologist',
+    imageUrl: 'https://randomuser.me/api/portraits/women/28.jpg',
+    hospital: 'Urology Specialists Center',
+    distance: '1.9 miles',
+    availableToday: true,
+    rating: 4.7
+  },
+  {
+    id: '12',
+    name: 'Dr. Arjun Patel',
+    specialty: 'Nephrologist',
+    imageUrl: 'https://randomuser.me/api/portraits/men/67.jpg',
+    hospital: 'Kidney Care Institute',
+    distance: '2.8 miles',
+    availableToday: false,
+    nextAvailable: 'Next available: Thursday',
+    rating: 4.8
+  },
+  {
+    id: '13',
+    name: 'Dr. Sophia Chen',
+    specialty: 'Cardiologist',
+    imageUrl: 'https://randomuser.me/api/portraits/women/42.jpg',
+    hospital: 'Heart & Vascular Institute',
+    distance: '3.2 miles',
+    availableToday: true,
+    rating: 4.9
+  },
+  {
+    id: '14',
+    name: 'Dr. William Taylor',
+    specialty: 'Orthopedic Surgeon',
+    imageUrl: 'https://randomuser.me/api/portraits/men/29.jpg',
+    hospital: 'Joint & Spine Center',
+    distance: '1.6 miles',
+    availableToday: false,
+    nextAvailable: 'Next available: Tuesday',
+    rating: 4.7
+  },
+  {
+    id: '15',
+    name: 'Dr. Neha Gupta',
+    specialty: 'Neurologist',
+    imageUrl: 'https://randomuser.me/api/portraits/women/59.jpg',
+    hospital: 'Neuroscience Institute',
+    distance: '2.5 miles',
+    availableToday: true,
+    rating: 4.8
+  },
+  {
+    id: '16',
+    name: 'Dr. Thomas Rodriguez',
+    specialty: 'Dermatologist',
+    imageUrl: 'https://randomuser.me/api/portraits/men/76.jpg',
+    hospital: 'Skin Health Center',
+    distance: '0.9 miles',
+    availableToday: true,
+    rating: 4.6
+  },
+  {
+    id: '17',
+    name: 'Dr. Maria Garcia',
+    specialty: 'Endocrinologist',
+    imageUrl: 'https://randomuser.me/api/portraits/women/15.jpg',
+    hospital: 'Hormone & Metabolic Center',
+    distance: '3.4 miles',
+    availableToday: false,
+    nextAvailable: 'Next available: Friday',
+    rating: 4.7
+  },
+  {
+    id: '18',
+    name: 'Dr. David Wilson',
+    specialty: 'Pulmonologist',
+    imageUrl: 'https://randomuser.me/api/portraits/men/86.jpg',
+    hospital: 'Lung & Breathing Center',
+    distance: '2.1 miles',
+    availableToday: true,
+    rating: 4.5
+  },
+  {
+    id: '19',
+    name: 'Dr. Ananya Sharma',
+    specialty: 'Pediatrician',
+    imageUrl: 'https://randomuser.me/api/portraits/women/25.jpg',
+    hospital: 'Children\'s Wellness Center',
+    distance: '1.3 miles',
+    availableToday: true,
+    rating: 4.9
+  },
+  {
+    id: '20',
+    name: 'Dr. Richard Brown',
+    specialty: 'Gastroenterologist',
+    imageUrl: 'https://randomuser.me/api/portraits/men/62.jpg',
+    hospital: 'GI Health Institute',
+    distance: '2.9 miles',
+    availableToday: false,
+    nextAvailable: 'Next available: Next Tuesday',
+    rating: 4.6
+  },
+  {
+    id: '21',
+    name: 'Dr. Emma Thompson',
+    specialty: 'Gynecologist',
+    imageUrl: 'https://randomuser.me/api/portraits/women/77.jpg',
+    hospital: 'Women\'s Health Center',
+    distance: '1.8 miles',
+    availableToday: true,
+    rating: 4.8
+  },
+  {
+    id: '22',
+    name: 'Dr. Vikram Singh',
+    specialty: 'Cardiologist',
+    imageUrl: 'https://randomuser.me/api/portraits/men/74.jpg',
+    hospital: 'Cardiac Care Hospital',
+    distance: '3.7 miles',
+    availableToday: false,
+    nextAvailable: 'Next available: Tomorrow',
+    rating: 4.7
+  },
+  {
+    id: '23',
+    name: 'Dr. Jessica Lee',
+    specialty: 'Ophthalmologist',
+    imageUrl: 'https://randomuser.me/api/portraits/women/90.jpg',
+    hospital: 'Vision Care Center',
+    distance: '2.3 miles',
+    availableToday: true,
+    rating: 4.6
+  },
+  {
+    id: '24',
+    name: 'Dr. Samuel Martinez',
+    specialty: 'Psychiatrist',
+    imageUrl: 'https://randomuser.me/api/portraits/men/42.jpg',
+    hospital: 'Behavioral Health Institute',
+    distance: '1.5 miles',
+    availableToday: false,
+    nextAvailable: 'Next available: Wednesday',
+    rating: 4.8
+  },
+  {
+    id: '25',
+    name: 'Dr. Amita Patel',
+    specialty: 'Nephrologist',
+    imageUrl: 'https://randomuser.me/api/portraits/women/53.jpg',
+    hospital: 'Renal Care Specialists',
+    distance: '3.2 miles',
+    availableToday: true,
+    rating: 4.7
+  },
+  {
+    id: '26',
+    name: 'Dr. Robert Harris',
+    specialty: 'Urologist',
+    imageUrl: 'https://randomuser.me/api/portraits/men/65.jpg',
+    hospital: 'Urology Associates',
+    distance: '2.6 miles',
+    availableToday: true,
+    rating: 4.5
+  },
+  {
+    id: '27',
+    name: 'Dr. Elena Rivera',
+    specialty: 'Dermatologist',
+    imageUrl: 'https://randomuser.me/api/portraits/women/37.jpg',
+    hospital: 'Dermatology Specialists',
+    distance: '1.9 miles',
+    availableToday: false,
+    nextAvailable: 'Next available: Thursday',
+    rating: 4.9
+  },
+  {
+    id: '28',
+    name: 'Dr. Aditya Verma',
+    specialty: 'Orthopedic Surgeon',
+    imageUrl: 'https://randomuser.me/api/portraits/men/97.jpg',
+    hospital: 'Bone & Joint Specialists',
+    distance: '0.7 miles',
+    availableToday: true,
+    rating: 4.8
+  },
+  {
+    id: '29',
+    name: 'Dr. Olivia Williams',
+    specialty: 'Neurologist',
+    imageUrl: 'https://randomuser.me/api/portraits/women/68.jpg',
+    hospital: 'Brain & Spine Center',
+    distance: '2.8 miles',
+    availableToday: false,
+    nextAvailable: 'Next available: Monday',
+    rating: 4.7
+  },
+  {
+    id: '30',
+    name: 'Dr. Christopher Lee',
+    specialty: 'Pulmonologist',
+    imageUrl: 'https://randomuser.me/api/portraits/men/39.jpg',
+    hospital: 'Respiratory Medicine Center',
+    distance: '1.4 miles',
+    availableToday: true,
+    rating: 4.6
   }
 ];
 
