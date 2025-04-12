@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
-import { MapPinIcon, Clock, Phone } from 'lucide-react';
+import { MapPinIcon, Clock, Phone, Stethoscope, Heart, Ambulance } from 'lucide-react';
 import DoctorCard, { Doctor } from '@/components/common/DoctorCard';
 
 // Mock data
@@ -26,6 +26,47 @@ const mockEmergencyDoctors: Doctor[] = [
     distance: '0.8 miles',
     availableToday: true,
     rating: 4.7
+  },
+  {
+    id: '3',
+    name: 'Dr. Priya Sharma',
+    specialty: 'Trauma Surgery',
+    imageUrl: 'https://randomuser.me/api/portraits/women/33.jpg',
+    hospital: 'Gandhi Medical College',
+    distance: '1.5 miles',
+    availableToday: true,
+    rating: 4.9
+  },
+  {
+    id: '4',
+    name: 'Dr. Rajesh Kumar',
+    specialty: 'Critical Care',
+    imageUrl: 'https://randomuser.me/api/portraits/men/44.jpg',
+    hospital: 'Hamidia Hospital',
+    distance: '2.3 miles',
+    availableToday: true,
+    rating: 4.6
+  },
+  {
+    id: '5',
+    name: 'Dr. Aisha Patel',
+    specialty: 'Pediatric Emergency',
+    imageUrl: 'https://randomuser.me/api/portraits/women/22.jpg',
+    hospital: 'Bhopal Children\'s Hospital',
+    distance: '1.7 miles',
+    availableToday: false,
+    nextAvailable: 'Available tomorrow',
+    rating: 4.8
+  },
+  {
+    id: '6',
+    name: 'Dr. Vikram Singh',
+    specialty: 'Cardiology Emergency',
+    imageUrl: 'https://randomuser.me/api/portraits/men/55.jpg',
+    hospital: 'Heart Care Bhopal',
+    distance: '3.1 miles',
+    availableToday: true,
+    rating: 4.9
   }
 ];
 
@@ -104,10 +145,27 @@ const EmergencyPage: React.FC = () => {
         )}
         
         <div className="mb-6">
-          <h3 className="text-lg font-bold text-care-dark mb-3">Other Emergency Options in Bhopal</h3>
+          <h3 className="text-lg font-bold text-care-dark mb-3">All Emergency Doctors in Bhopal</h3>
           {mockEmergencyDoctors.filter(d => d.id !== nearestDoctor?.id).map(doctor => (
             <DoctorCard key={doctor.id} doctor={doctor} showBookButton={false} />
           ))}
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="bg-white rounded-xl p-4 shadow text-center">
+            <div className="flex flex-col items-center">
+              <Ambulance className="h-8 w-8 text-red-500 mb-2" />
+              <span className="font-medium">Emergency Response Time</span>
+              <span className="text-care-success">~10 minutes</span>
+            </div>
+          </div>
+          <div className="bg-white rounded-xl p-4 shadow text-center">
+            <div className="flex flex-col items-center">
+              <Heart className="h-8 w-8 text-red-500 mb-2" />
+              <span className="font-medium">Specialist Available</span>
+              <span className="text-care-success">24/7</span>
+            </div>
+          </div>
         </div>
         
         <button 
