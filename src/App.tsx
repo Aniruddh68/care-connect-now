@@ -33,6 +33,7 @@ const App = () => (
             <Route path="/nearby" element={<Nearby />} />
             <Route path="/emergency" element={<Emergency />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/settings/accounts" element={<Settings />} />
             <Route path="/profile" element={<Profile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

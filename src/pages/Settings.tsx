@@ -1,9 +1,10 @@
 
 import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
-import { User, Bell, Lock, HelpCircle, LogOut } from 'lucide-react';
+import { User, Bell, Lock, HelpCircle, LogOut, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import MultipleAccounts from '@/components/settings/MultipleAccounts';
 
 const SettingsPage: React.FC = () => {
   const { toast } = useToast();
@@ -55,6 +56,9 @@ const SettingsPage: React.FC = () => {
             <p className="text-sm text-care-muted">+1 (555) 123-4567</p>
           </div>
         </div>
+        
+        {/* Multiple Accounts Section */}
+        <MultipleAccounts />
         
         <div className="mb-6">
           <h3 className="text-lg font-bold text-care-dark mb-3">Settings</h3>
