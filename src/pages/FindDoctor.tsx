@@ -14,6 +14,9 @@ const specialties = [
   { id: 'neuro', label: 'Neurology' },
   { id: 'pedia', label: 'Pediatrics' },
   { id: 'gyna', label: 'Gynecology' },
+  { id: 'psych', label: 'Psychiatry' },
+  { id: 'pulmo', label: 'Pulmonology' },
+  { id: 'gastro', label: 'Gastroenterology' },
 ];
 
 const availability = [
@@ -82,6 +85,58 @@ const mockDoctors: Doctor[] = [
     distance: '1.7 miles',
     availableToday: true,
     rating: 4.9
+  },
+  {
+    id: '6',
+    name: 'Dr. Rajesh Kumar',
+    specialty: 'Gastroenterologist',
+    imageUrl: 'https://randomuser.me/api/portraits/men/44.jpg',
+    hospital: 'Digestive Health Center',
+    distance: '2.2 miles',
+    availableToday: true,
+    rating: 4.7
+  },
+  {
+    id: '7',
+    name: 'Dr. Priya Sharma',
+    specialty: 'Psychiatrist',
+    imageUrl: 'https://randomuser.me/api/portraits/women/33.jpg',
+    hospital: 'Mental Wellness Clinic',
+    distance: '1.5 miles',
+    availableToday: false,
+    nextAvailable: 'Next available: Monday',
+    rating: 4.8
+  },
+  {
+    id: '8',
+    name: 'Dr. Daniel Lee',
+    specialty: 'Ophthalmologist',
+    imageUrl: 'https://randomuser.me/api/portraits/men/36.jpg',
+    hospital: 'Bhopal Eye Institute',
+    distance: '3.5 miles',
+    availableToday: true,
+    rating: 4.6
+  },
+  {
+    id: '9',
+    name: 'Dr. Aisha Khan',
+    specialty: 'Endocrinologist',
+    imageUrl: 'https://randomuser.me/api/portraits/women/22.jpg',
+    hospital: 'Diabetes & Hormone Center',
+    distance: '1.8 miles',
+    availableToday: false,
+    nextAvailable: 'Next available: Wednesday',
+    rating: 4.9
+  },
+  {
+    id: '10',
+    name: 'Dr. Robert Williams',
+    specialty: 'Pulmonologist',
+    imageUrl: 'https://randomuser.me/api/portraits/men/55.jpg',
+    hospital: 'Respiratory Care Hospital',
+    distance: '2.7 miles',
+    availableToday: true,
+    rating: 4.5
   }
 ];
 
