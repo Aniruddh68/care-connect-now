@@ -73,18 +73,20 @@
   }
 
   body {
-    @apply bg-care-background text-care-dark;
+    @apply bg-care-background text-care-dark font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
+    background-size: 20px 20px;
+    background-image: radial-gradient(circle, #E2E8F0 1px, transparent 1px);
   }
 }
 
 @layer components {
   .emergency-button {
-    @apply bg-care-accent text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:bg-orange-600 transition-colors duration-200;
+    @apply bg-gradient-to-r from-care-accent to-orange-500 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:bg-orange-600 transition-colors duration-200 transform hover:scale-105;
   }
   
   .primary-button {
-    @apply bg-care-primary text-white font-semibold py-3 px-5 rounded-lg shadow hover:bg-sky-600 transition-colors duration-200;
+    @apply bg-gradient-to-r from-care-primary to-sky-500 text-white font-semibold py-3 px-5 rounded-lg shadow hover:from-sky-600 hover:to-sky-700 transition-all duration-200 transform hover:scale-102;
   }
   
   .secondary-button {
@@ -92,6 +94,33 @@
   }
   
   .card-hover {
-    @apply hover:shadow-md transition-shadow duration-200;
+    @apply hover:shadow-md transition-shadow duration-200 hover:translate-y-[-2px];
   }
+
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20 rounded-xl shadow-md;
+  }
+
+  .section-title {
+    @apply text-xl font-bold text-care-dark relative mb-4 pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-1 after:bg-care-primary after:rounded;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }

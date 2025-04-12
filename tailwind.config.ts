@@ -77,6 +77,9 @@ export default {
 					'muted': '#94A3B8', // slate for muted text
 				}
 			},
+			fontFamily: {
+				sans: ['Poppins', 'sans-serif'],
+			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
@@ -102,13 +105,22 @@ export default {
 				'pulse-soft': {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.8' }
-				}
+				},
+				'float': {
+                    '0%, 100%': { transform: 'translateY(0)' },
+                    '50%': { transform: 'translateY(-10px)' }
+                }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'pulse-soft': 'pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
-			}
+				'pulse-soft': 'pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'float': 'float 3s ease-in-out infinite'
+			},
+			backgroundImage: {
+                'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                'dot-pattern': 'radial-gradient(circle, #E2E8F0 1px, transparent 1px)',
+            },
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
