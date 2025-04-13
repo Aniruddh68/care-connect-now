@@ -1,27 +1,23 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import BottomNav from './BottomNav';
 import { UserIcon, MapPinIcon, CalendarIcon, InfoIcon } from 'lucide-react';
-
 interface MainLayoutProps {
   children: React.ReactNode;
   hideNav?: boolean;
   title?: string;
 }
-
-const MainLayout: React.FC<MainLayoutProps> = ({ 
-  children, 
+const MainLayout: React.FC<MainLayoutProps> = ({
+  children,
   hideNav = false,
   title = "Care Connect Bhopal"
 }) => {
-  return (
-    <div className="flex flex-col min-h-screen bg-care-background">
+  return <div className="flex flex-col min-h-screen bg-care-background">
       <header className="sticky top-0 z-10 bg-white/90 backdrop-blur-sm shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <Link to="/" className="flex items-center transition-transform hover:scale-105">
-              <span className="bg-gradient-to-r from-care-primary to-sky-500 bg-clip-text text-transparent font-bold text-2xl">
+              <span className="bg-gradient-to-r from-care-primary to-sky-500 bg-clip-text font-bold text-2xl text-cyan-500 text-left">
                 {title}
               </span>
             </Link>
@@ -41,11 +37,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
         </div>
       </main>
       
-      {!hideNav && (
-        <BottomNav />
-      )}
-    </div>
-  );
+      {!hideNav && <BottomNav />}
+    </div>;
 };
-
 export default MainLayout;
