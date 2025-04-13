@@ -1,8 +1,10 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
-import { MapPinIcon, Clock, Phone, ArrowRight } from 'lucide-react';
+import { MapPinIcon, Clock, Phone, ArrowRight, Navigation, RefreshCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useLocation } from '@/context/LocationContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface Hospital {
   id: string;
@@ -13,9 +15,11 @@ interface Hospital {
   phone: string;
   open: boolean;
   hours: string;
+  lat: number;
+  lng: number;
 }
 
-// Mock data
+// Mock data with latitude and longitude
 const mockHospitals: Hospital[] = [
   {
     id: '1',
@@ -25,7 +29,9 @@ const mockHospitals: Hospital[] = [
     availableDoctors: 5,
     phone: '(0755) 123-4567',
     open: true,
-    hours: 'Open 24 hours'
+    hours: 'Open 24 hours',
+    lat: 23.2599,
+    lng: 77.4126
   },
   {
     id: '2',
@@ -35,7 +41,9 @@ const mockHospitals: Hospital[] = [
     availableDoctors: 3,
     phone: '(0755) 987-6543',
     open: true,
-    hours: 'Open 24 hours'
+    hours: 'Open 24 hours',
+    lat: 23.2067,
+    lng: 77.4589
   },
   {
     id: '3',
@@ -45,7 +53,9 @@ const mockHospitals: Hospital[] = [
     availableDoctors: 8,
     phone: '(0755) 456-7890',
     open: true,
-    hours: 'Open 24 hours'
+    hours: 'Open 24 hours',
+    lat: 23.2332,
+    lng: 77.4029
   },
   {
     id: '4',
@@ -55,34 +65,123 @@ const mockHospitals: Hospital[] = [
     availableDoctors: 4,
     phone: '(0755) 234-5678',
     open: true,
-    hours: 'Open 24 hours'
+    hours: 'Open 24 hours',
+    lat: 23.2431,
+    lng: 77.4347
   }
 ];
 
-// Sort hospitals by distance
-const sortedHospitals = [...mockHospitals].sort((a, b) => {
-  const distanceA = parseFloat(a.distance.split(' ')[0]);
-  const distanceB = parseFloat(b.distance.split(' ')[0]);
-  return distanceA - distanceB;
-});
-
 const NearbyPage: React.FC = () => {
-  // This would use real location data in a production app
-  const [hospitals] = useState<Hospital[]>(sortedHospitals);
+  const { toast } = useToast();
+  const { userLocation, requestLocationPermission, isLocating } = useLocation();
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  
+  // Calculate distance between two coordinates in km
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    const distance = R * c;
+    return distance.toFixed(1);
+  };
+  
+  // Update hospitals with calculated distances when location changes
+  useEffect(() => {
+    if (userLocation) {
+      const hospitalsWithDistance = mockHospitals.map(hospital => {
+        const distanceKm = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          hospital.lat,
+          hospital.lng
+        );
+        return {
+          ...hospital,
+          distance: `${distanceKm} km`
+        };
+      });
+      
+      // Sort by actual distance
+      const sortedHospitals = [...hospitalsWithDistance].sort((a, b) => {
+        const distanceA = parseFloat(a.distance.split(' ')[0]);
+        const distanceB = parseFloat(b.distance.split(' ')[0]);
+        return distanceA - distanceB;
+      });
+      
+      setHospitals(sortedHospitals);
+      
+      toast({
+        title: "Hospitals updated",
+        description: `Found ${sortedHospitals.length} nearby hospitals in Bhopal`,
+      });
+    } else {
+      // If no location, use the mock data with default sorting
+      const sortedHospitals = [...mockHospitals].sort((a, b) => {
+        const distanceA = parseFloat(a.distance.split(' ')[0]);
+        const distanceB = parseFloat(b.distance.split(' ')[0]);
+        return distanceA - distanceB;
+      });
+      setHospitals(sortedHospitals);
+    }
+  }, [userLocation, toast]);
   
   return (
     <MainLayout title="Nearby Hospitals in Bhopal">
       <div className="max-w-lg mx-auto px-4 pb-20 pt-4">
         <div className="mb-6">
-          <div className="aspect-video bg-gray-200 rounded-xl mb-4 flex items-center justify-center">
-            <p className="text-care-muted">Map of Bhopal would appear here</p>
+          <div className="aspect-video bg-gray-200 rounded-xl mb-4 flex items-center justify-center relative">
+            {userLocation ? (
+              <div className="text-care-muted flex flex-col items-center">
+                <Navigation className="h-10 w-10 text-care-primary mb-2" />
+                <p>Your location: {userLocation.latitude.toFixed(4)}, {userLocation.longitude.toFixed(4)}</p>
+                <button 
+                  onClick={requestLocationPermission}
+                  className="mt-2 flex items-center text-care-primary text-sm"
+                >
+                  <RefreshCcw className="h-3 w-3 mr-1" />
+                  Update location
+                </button>
+              </div>
+            ) : (
+              <div className="text-care-muted flex flex-col items-center">
+                <p>Map of Bhopal would appear here</p>
+                <button 
+                  onClick={requestLocationPermission}
+                  className="mt-3 px-4 py-2 bg-care-primary text-white rounded-lg flex items-center"
+                  disabled={isLocating}
+                >
+                  {isLocating ? (
+                    <>
+                      <div className="h-4 w-4 mr-2 rounded-full border-2 border-white border-t-transparent animate-spin"></div>
+                      Locating...
+                    </>
+                  ) : (
+                    <>
+                      <MapPinIcon className="h-4 w-4 mr-2" />
+                      Enable Location
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
           
           <p className="text-care-muted text-sm mb-1">
-            Showing hospitals near your location in Bhopal
+            {userLocation 
+              ? "Showing hospitals near your current location" 
+              : "Showing hospitals near default location in Bhopal"}
           </p>
-          <button className="text-care-primary text-sm font-medium">
-            Change location
+          <button 
+            onClick={requestLocationPermission} 
+            className="text-care-primary text-sm font-medium"
+            disabled={isLocating}
+          >
+            {isLocating ? "Locating..." : "Update location"}
           </button>
         </div>
         
@@ -117,7 +216,19 @@ const NearbyPage: React.FC = () => {
               
               <div className="flex gap-4 mt-3">
                 <button 
-                  onClick={() => alert('This would navigate to the hospital in Bhopal')}
+                  onClick={() => {
+                    if (userLocation) {
+                      // This would use real map navigation in a production app
+                      window.open(`https://www.google.com/maps/dir/${userLocation.latitude},${userLocation.longitude}/${hospital.lat},${hospital.lng}`);
+                    } else {
+                      toast({
+                        title: "Location required",
+                        description: "Please enable location to get directions",
+                        variant: "destructive"
+                      });
+                      requestLocationPermission();
+                    }
+                  }}
                   className="flex-1 primary-button py-2 flex items-center justify-center"
                 >
                   <MapPinIcon className="mr-2 h-4 w-4" />
