@@ -5,7 +5,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import Searchbar from '@/components/common/Searchbar';
 import EmergencyButton from '@/components/common/EmergencyButton';
 import DoctorCard, { Doctor } from '@/components/common/DoctorCard';
-import FilterChips from '@/components/common/FilterChips';
+import FilterButton from '@/components/common/FilterButton';
 import { CalendarIcon, MapPinIcon } from 'lucide-react';
 
 // Mock data
@@ -72,13 +72,14 @@ const HomePage: React.FC = () => {
             <p className="text-care-muted text-sm">Discover the best healthcare professionals near you</p>
           </div>
           
-          <Searchbar onSearch={handleSearch} />
-          
-          <div className="mt-4">
-            <FilterChips 
-              options={specialties}
-              selectedOptionIds={selectedSpecialties}
-              onChange={setSelectedSpecialties}
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Searchbar onSearch={handleSearch} />
+            </div>
+            <FilterButton
+              specialties={specialties}
+              selectedSpecialties={selectedSpecialties}
+              onSpecialtiesChange={setSelectedSpecialties}
             />
           </div>
         </div>
