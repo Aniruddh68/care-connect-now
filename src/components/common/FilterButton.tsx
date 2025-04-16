@@ -9,17 +9,41 @@ import {
 } from "@/components/ui/popover";
 import FilterChips from './FilterChips';
 
+interface FilterOption {
+  id: string;
+  label: string;
+}
+
+interface FilterSection {
+  title: string;
+  options: FilterOption[];
+  selectedIds: string[];
+  onChange: (selected: string[]) => void;
+}
+
 interface FilterButtonProps {
-  specialties: Array<{ id: string; label: string; }>;
-  selectedSpecialties: string[];
-  onSpecialtiesChange: (selected: string[]) => void;
+  sections?: FilterSection[];
+  specialties?: Array<{ id: string; label: string; }>;
+  selectedSpecialties?: string[];
+  onSpecialtiesChange?: (selected: string[]) => void;
 }
 
 const FilterButton: React.FC<FilterButtonProps> = ({
+  sections,
   specialties,
   selectedSpecialties,
   onSpecialtiesChange,
 }) => {
+  // If sections are provided, use them; otherwise, create a single specialty section
+  const filterSections = sections || (specialties && selectedSpecialties && onSpecialtiesChange ? [
+    {
+      title: "Specialty",
+      options: specialties,
+      selectedIds: selectedSpecialties,
+      onChange: onSpecialtiesChange
+    }
+  ] : []);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -33,14 +57,16 @@ const FilterButton: React.FC<FilterButtonProps> = ({
       </PopoverTrigger>
       <PopoverContent className="w-80" align="end">
         <div className="space-y-4">
-          <div>
-            <h4 className="font-medium mb-2 text-sm">Specialty</h4>
-            <FilterChips
-              options={specialties}
-              selectedOptionIds={selectedSpecialties}
-              onChange={onSpecialtiesChange}
-            />
-          </div>
+          {filterSections.map((section, index) => (
+            <div key={index}>
+              <h4 className="font-medium mb-2 text-sm">{section.title}</h4>
+              <FilterChips
+                options={section.options}
+                selectedOptionIds={section.selectedIds}
+                onChange={section.onChange}
+              />
+            </div>
+          ))}
         </div>
       </PopoverContent>
     </Popover>

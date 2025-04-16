@@ -2,7 +2,19 @@ import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import Searchbar from '@/components/common/Searchbar';
 import DoctorCard, { Doctor } from '@/components/common/DoctorCard';
+import FilterButton from '@/components/common/FilterButton';
 import FilterChips from '@/components/common/FilterChips';
+import { Separator } from '@/components/ui/separator';
+import { Filter, SlidersHorizontal } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from '@/components/ui/button';
 
 // Mock data
 const specialties = [
@@ -355,56 +367,126 @@ const FindDoctorPage: React.FC = () => {
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>(['all']);
   const [selectedAvailability, setSelectedAvailability] = useState<string[]>(['any']);
   const [selectedDistance, setSelectedDistance] = useState<string[]>(['any']);
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const filteredDoctors = mockDoctors.filter(doctor => {
+    if (!selectedSpecialties.includes('all') && 
+        !selectedSpecialties.some(s => doctor.specialty.toLowerCase().includes(s))) {
+      return false;
+    }
+    
+    if (selectedAvailability.includes('today') && !doctor.availableToday) {
+      return false;
+    }
+    
+    if (searchQuery && 
+        !doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
+        !doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        !doctor.hospital.toLowerCase().includes(searchQuery.toLowerCase())) {
+      return false;
+    }
+    
+    return true;
+  });
   
   const handleSearch = (query: string) => {
-    console.log('Searching for:', query);
-    // Would integrate with backend search
+    setSearchQuery(query);
   };
   
   return (
     <MainLayout title="Find a Doctor in Bhopal">
       <div className="max-w-lg mx-auto px-4 pb-20 pt-4">
         <div className="mb-6 sticky top-16 bg-care-background pt-2 pb-2 z-10">
-          <Searchbar onSearch={handleSearch} placeholder="Search for doctors in Bhopal..." />
-          
-          <div className="mt-4">
-            <h3 className="text-sm text-care-muted mb-1">Specialty</h3>
-            <FilterChips 
-              options={specialties}
-              selectedOptionIds={selectedSpecialties}
-              onChange={setSelectedSpecialties}
-            />
+          <div className="flex gap-2 mb-4">
+            <div className="flex-1">
+              <Searchbar 
+                onSearch={handleSearch} 
+                placeholder="Search for doctors in Bhopal..." 
+              />
+            </div>
+            
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="bg-white hover:bg-gray-50"
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Filter Doctors</SheetTitle>
+                  <SheetDescription>
+                    Customize your search results with these filters
+                  </SheetDescription>
+                </SheetHeader>
+                
+                <div className="py-4">
+                  <div className="mb-4">
+                    <h3 className="text-sm font-medium mb-2">Specialty</h3>
+                    <FilterChips 
+                      options={specialties}
+                      selectedOptionIds={selectedSpecialties}
+                      onChange={setSelectedSpecialties}
+                    />
+                  </div>
+                  
+                  <Separator className="my-4" />
+                  
+                  <div className="mb-4">
+                    <h3 className="text-sm font-medium mb-2">Availability</h3>
+                    <FilterChips 
+                      options={availability}
+                      selectedOptionIds={selectedAvailability}
+                      onChange={setSelectedAvailability}
+                    />
+                  </div>
+                  
+                  <Separator className="my-4" />
+                  
+                  <div className="mb-4">
+                    <h3 className="text-sm font-medium mb-2">Distance</h3>
+                    <FilterChips 
+                      options={distance}
+                      selectedOptionIds={selectedDistance}
+                      onChange={setSelectedDistance}
+                    />
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
           
-          <div className="mt-2">
-            <h3 className="text-sm text-care-muted mb-1">Availability</h3>
-            <FilterChips 
-              options={availability}
-              selectedOptionIds={selectedAvailability}
-              onChange={setSelectedAvailability}
-            />
-          </div>
-          
-          <div className="mt-2">
-            <h3 className="text-sm text-care-muted mb-1">Distance</h3>
-            <FilterChips 
-              options={distance}
-              selectedOptionIds={selectedDistance}
-              onChange={setSelectedDistance}
-            />
+          <div className="overflow-x-auto">
+            <div className="flex gap-2 pb-2">
+              <FilterChips 
+                options={specialties}
+                selectedOptionIds={selectedSpecialties}
+                onChange={setSelectedSpecialties}
+              />
+            </div>
           </div>
         </div>
         
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-care-dark">
-              {mockDoctors.length} Doctors Found in Bhopal
+              {filteredDoctors.length} Doctors Found in Bhopal
             </h2>
           </div>
           
-          {mockDoctors.map(doctor => (
-            <DoctorCard key={doctor.id} doctor={doctor} />
-          ))}
+          {filteredDoctors.length > 0 ? (
+            filteredDoctors.map(doctor => (
+              <DoctorCard key={doctor.id} doctor={doctor} />
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-care-muted">No doctors found matching your criteria.</p>
+              <p className="text-care-muted text-sm mt-2">Try adjusting your filters or search terms.</p>
+            </div>
+          )}
         </div>
       </div>
     </MainLayout>
