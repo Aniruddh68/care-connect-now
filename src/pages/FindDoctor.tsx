@@ -15,8 +15,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from '@/components/ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
 
-// Mock data
 const specialties = [
   { id: 'all', label: 'All Specialties' },
   { id: 'cardio', label: 'Cardiology' },
@@ -368,6 +368,7 @@ const FindDoctorPage: React.FC = () => {
   const [selectedAvailability, setSelectedAvailability] = useState<string[]>(['any']);
   const [selectedDistance, setSelectedDistance] = useState<string[]>(['any']);
   const [searchQuery, setSearchQuery] = useState('');
+  const isMobile = useIsMobile();
   
   const filteredDoctors = mockDoctors.filter(doctor => {
     if (!selectedSpecialties.includes('all') && 
@@ -395,98 +396,149 @@ const FindDoctorPage: React.FC = () => {
   
   return (
     <MainLayout title="Find a Doctor in Bhopal">
-      <div className="max-w-lg mx-auto px-4 pb-20 pt-4">
-        <div className="mb-6 sticky top-16 bg-care-background pt-2 pb-2 z-10">
-          <div className="flex gap-2 mb-4">
-            <div className="flex-1">
-              <Searchbar 
-                onSearch={handleSearch} 
-                placeholder="Search for doctors in Bhopal..." 
-              />
+      <div className="max-w-7xl mx-auto px-4 pb-20 pt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[300px,1fr] gap-6">
+          <aside className="hidden lg:block bg-white rounded-lg shadow-sm p-6 h-fit sticky top-20">
+            <h3 className="font-semibold mb-4">Filter Doctors</h3>
+            
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-sm font-medium mb-2">Specialty</h4>
+                <FilterChips 
+                  options={specialties}
+                  selectedOptionIds={selectedSpecialties}
+                  onChange={setSelectedSpecialties}
+                  className="flex flex-wrap gap-2"
+                />
+              </div>
+              
+              <Separator />
+              
+              <div>
+                <h4 className="text-sm font-medium mb-2">Availability</h4>
+                <FilterChips 
+                  options={availability}
+                  selectedOptionIds={selectedAvailability}
+                  onChange={setSelectedAvailability}
+                  className="flex flex-wrap gap-2"
+                />
+              </div>
+              
+              <Separator />
+              
+              <div>
+                <h4 className="text-sm font-medium mb-2">Distance</h4>
+                <FilterChips 
+                  options={distance}
+                  selectedOptionIds={selectedDistance}
+                  onChange={setSelectedDistance}
+                  className="flex flex-wrap gap-2"
+                />
+              </div>
+            </div>
+          </aside>
+
+          <main>
+            <div className="sticky top-16 bg-care-background pt-2 pb-2 z-10 mb-6">
+              <div className="flex gap-2 mb-4">
+                <div className="flex-1">
+                  <Searchbar 
+                    onSearch={handleSearch} 
+                    placeholder="Search for doctors in Bhopal..." 
+                  />
+                </div>
+                
+                {isMobile && (
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="bg-white hover:bg-gray-50"
+                      >
+                        <SlidersHorizontal className="h-4 w-4" />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="w-[300px]">
+                      <SheetHeader className="mb-6">
+                        <SheetTitle>Filter Doctors</SheetTitle>
+                        <SheetDescription>
+                          Customize your search results
+                        </SheetDescription>
+                      </SheetHeader>
+                      
+                      <div className="space-y-6">
+                        <div>
+                          <h4 className="text-sm font-medium mb-2">Specialty</h4>
+                          <FilterChips 
+                            options={specialties}
+                            selectedOptionIds={selectedSpecialties}
+                            onChange={setSelectedSpecialties}
+                            className="flex flex-wrap gap-2"
+                          />
+                        </div>
+                        
+                        <Separator />
+                        
+                        <div>
+                          <h4 className="text-sm font-medium mb-2">Availability</h4>
+                          <FilterChips 
+                            options={availability}
+                            selectedOptionIds={selectedAvailability}
+                            onChange={setSelectedAvailability}
+                            className="flex flex-wrap gap-2"
+                          />
+                        </div>
+                        
+                        <Separator />
+                        
+                        <div>
+                          <h4 className="text-sm font-medium mb-2">Distance</h4>
+                          <FilterChips 
+                            options={distance}
+                            selectedOptionIds={selectedDistance}
+                            onChange={setSelectedDistance}
+                            className="flex flex-wrap gap-2"
+                          />
+                        </div>
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                )}
+              </div>
+              
+              <div className="overflow-x-auto">
+                <div className="flex gap-2 pb-2">
+                  <FilterChips 
+                    options={specialties}
+                    selectedOptionIds={selectedSpecialties}
+                    onChange={setSelectedSpecialties}
+                  />
+                </div>
+              </div>
             </div>
             
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="bg-white hover:bg-gray-50"
-                >
-                  <SlidersHorizontal className="h-4 w-4" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>Filter Doctors</SheetTitle>
-                  <SheetDescription>
-                    Customize your search results with these filters
-                  </SheetDescription>
-                </SheetHeader>
-                
-                <div className="py-4">
-                  <div className="mb-4">
-                    <h3 className="text-sm font-medium mb-2">Specialty</h3>
-                    <FilterChips 
-                      options={specialties}
-                      selectedOptionIds={selectedSpecialties}
-                      onChange={setSelectedSpecialties}
-                    />
+            <div>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold text-care-dark">
+                  {filteredDoctors.length} Doctors Found in Bhopal
+                </h2>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {filteredDoctors.length > 0 ? (
+                  filteredDoctors.map(doctor => (
+                    <DoctorCard key={doctor.id} doctor={doctor} />
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-8">
+                    <p className="text-care-muted">No doctors found matching your criteria.</p>
+                    <p className="text-care-muted text-sm mt-2">Try adjusting your filters or search terms.</p>
                   </div>
-                  
-                  <Separator className="my-4" />
-                  
-                  <div className="mb-4">
-                    <h3 className="text-sm font-medium mb-2">Availability</h3>
-                    <FilterChips 
-                      options={availability}
-                      selectedOptionIds={selectedAvailability}
-                      onChange={setSelectedAvailability}
-                    />
-                  </div>
-                  
-                  <Separator className="my-4" />
-                  
-                  <div className="mb-4">
-                    <h3 className="text-sm font-medium mb-2">Distance</h3>
-                    <FilterChips 
-                      options={distance}
-                      selectedOptionIds={selectedDistance}
-                      onChange={setSelectedDistance}
-                    />
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-          
-          <div className="overflow-x-auto">
-            <div className="flex gap-2 pb-2">
-              <FilterChips 
-                options={specialties}
-                selectedOptionIds={selectedSpecialties}
-                onChange={setSelectedSpecialties}
-              />
+                )}
+              </div>
             </div>
-          </div>
-        </div>
-        
-        <div>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-care-dark">
-              {filteredDoctors.length} Doctors Found in Bhopal
-            </h2>
-          </div>
-          
-          {filteredDoctors.length > 0 ? (
-            filteredDoctors.map(doctor => (
-              <DoctorCard key={doctor.id} doctor={doctor} />
-            ))
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-care-muted">No doctors found matching your criteria.</p>
-              <p className="text-care-muted text-sm mt-2">Try adjusting your filters or search terms.</p>
-            </div>
-          )}
+          </main>
         </div>
       </div>
     </MainLayout>
