@@ -22,7 +22,7 @@ interface DoctorCardProps {
 
 const DoctorCard: React.FC<DoctorCardProps> = ({ 
   doctor,
-  showBookButton = true
+  showBookButton = true // Default is true to always show the book button
 }) => {
   return (
     <div className="bg-white rounded-xl shadow p-4 mb-4 card-hover">
@@ -60,14 +60,13 @@ const DoctorCard: React.FC<DoctorCardProps> = ({
               )}
             </div>
             
-            {showBookButton && (
-              <Link 
-                to={`/book/${doctor.id}`}
-                className="primary-button text-sm py-2 px-4"
-              >
-                Book Now
-              </Link>
-            )}
+            {/* Always show the Book Now button */}
+            <Link 
+              to={`/book/${doctor.id}`}
+              className="primary-button text-sm py-2 px-4"
+            >
+              Book Now
+            </Link>
           </div>
         </div>
       </div>
