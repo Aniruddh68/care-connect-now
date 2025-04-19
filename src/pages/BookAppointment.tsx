@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -385,7 +386,7 @@ const BookAppointmentPage: React.FC = () => {
   return (
     <MainLayout title="Book Appointment">
       <div className="max-w-3xl mx-auto px-4 pb-20 pt-4">
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-6 animate-fade-in">
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             <img 
               src={doctor.imageUrl} 
@@ -406,7 +407,7 @@ const BookAppointmentPage: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-6">
+          <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
             <div>
               <h3 className="text-lg font-bold mb-3 flex items-center">
                 <Calendar className="mr-2 h-5 w-5 text-care-primary" />
@@ -472,7 +473,7 @@ const BookAppointmentPage: React.FC = () => {
             </div>
           </div>
           
-          <div className="space-y-6">
+          <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <div>
               <h3 className="text-lg font-bold mb-3">Reason for Visit</h3>
               <textarea

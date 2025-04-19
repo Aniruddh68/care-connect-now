@@ -404,36 +404,39 @@ const FindDoctorPage: React.FC = () => {
             <div className="space-y-6">
               <div>
                 <h4 className="text-sm font-medium mb-2">Specialty</h4>
-                <FilterChips 
-                  options={specialties}
-                  selectedOptionIds={selectedSpecialties}
-                  onChange={setSelectedSpecialties}
-                  className="flex flex-wrap gap-2"
-                />
+                <div className="flex flex-wrap gap-2">
+                  <FilterChips 
+                    options={specialties}
+                    selectedOptionIds={selectedSpecialties}
+                    onChange={setSelectedSpecialties}
+                  />
+                </div>
               </div>
               
               <Separator />
               
               <div>
                 <h4 className="text-sm font-medium mb-2">Availability</h4>
-                <FilterChips 
-                  options={availability}
-                  selectedOptionIds={selectedAvailability}
-                  onChange={setSelectedAvailability}
-                  className="flex flex-wrap gap-2"
-                />
+                <div className="flex flex-wrap gap-2">
+                  <FilterChips 
+                    options={availability}
+                    selectedOptionIds={selectedAvailability}
+                    onChange={setSelectedAvailability}
+                  />
+                </div>
               </div>
               
               <Separator />
               
               <div>
                 <h4 className="text-sm font-medium mb-2">Distance</h4>
-                <FilterChips 
-                  options={distance}
-                  selectedOptionIds={selectedDistance}
-                  onChange={setSelectedDistance}
-                  className="flex flex-wrap gap-2"
-                />
+                <div className="flex flex-wrap gap-2">
+                  <FilterChips 
+                    options={distance}
+                    selectedOptionIds={selectedDistance}
+                    onChange={setSelectedDistance}
+                  />
+                </div>
               </div>
             </div>
           </aside>
@@ -470,36 +473,39 @@ const FindDoctorPage: React.FC = () => {
                       <div className="space-y-6">
                         <div>
                           <h4 className="text-sm font-medium mb-2">Specialty</h4>
-                          <FilterChips 
-                            options={specialties}
-                            selectedOptionIds={selectedSpecialties}
-                            onChange={setSelectedSpecialties}
-                            className="flex flex-wrap gap-2"
-                          />
+                          <div className="flex flex-wrap gap-2">
+                            <FilterChips 
+                              options={specialties}
+                              selectedOptionIds={selectedSpecialties}
+                              onChange={setSelectedSpecialties}
+                            />
+                          </div>
                         </div>
                         
                         <Separator />
                         
                         <div>
                           <h4 className="text-sm font-medium mb-2">Availability</h4>
-                          <FilterChips 
-                            options={availability}
-                            selectedOptionIds={selectedAvailability}
-                            onChange={setSelectedAvailability}
-                            className="flex flex-wrap gap-2"
-                          />
+                          <div className="flex flex-wrap gap-2">
+                            <FilterChips 
+                              options={availability}
+                              selectedOptionIds={selectedAvailability}
+                              onChange={setSelectedAvailability}
+                            />
+                          </div>
                         </div>
                         
                         <Separator />
                         
                         <div>
                           <h4 className="text-sm font-medium mb-2">Distance</h4>
-                          <FilterChips 
-                            options={distance}
-                            selectedOptionIds={selectedDistance}
-                            onChange={setSelectedDistance}
-                            className="flex flex-wrap gap-2"
-                          />
+                          <div className="flex flex-wrap gap-2">
+                            <FilterChips 
+                              options={distance}
+                              selectedOptionIds={selectedDistance}
+                              onChange={setSelectedDistance}
+                            />
+                          </div>
                         </div>
                       </div>
                     </SheetContent>
