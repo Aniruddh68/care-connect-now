@@ -54,6 +54,29 @@ interface AppointmentState {
   cancelAppointment: (id: string) => void;
 }
 
+// Custom storage with date handling
+const customStorage = {
+  getItem: (name: string) => {
+    const str = localStorage.getItem(name);
+    if (!str) return null;
+    
+    const data = JSON.parse(str);
+    if (data.state?.appointments) {
+      data.state.appointments = data.state.appointments.map((apt: any) => ({
+        ...apt,
+        date: new Date(apt.date)
+      }));
+    }
+    return JSON.stringify(data);
+  },
+  setItem: (name: string, value: string) => {
+    localStorage.setItem(name, value);
+  },
+  removeItem: (name: string) => {
+    localStorage.removeItem(name);
+  }
+};
+
 export const useAppointmentStore = create<AppointmentState>()(
   persist(
     (set) => ({
@@ -79,17 +102,7 @@ export const useAppointmentStore = create<AppointmentState>()(
     }),
     {
       name: 'appointments-storage',
-      // Convert dates back to Date objects
-      deserialize: (str) => {
-        const data = JSON.parse(str);
-        if (data.state?.appointments) {
-          data.state.appointments = data.state.appointments.map((apt: any) => ({
-            ...apt,
-            date: new Date(apt.date)
-          }));
-        }
-        return data;
-      }
+      storage: customStorage
     }
   )
 );
