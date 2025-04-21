@@ -1,6 +1,6 @@
 
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, type PersistStorage, type StorageValue } from 'zustand/middleware';
 
 export interface Appointment {
   id: string;
@@ -54,9 +54,9 @@ interface AppointmentState {
   cancelAppointment: (id: string) => void;
 }
 
-// Custom storage with date handling that matches PersistStorage interface
-const customStorage = {
-  getItem: (name: string) => {
+// Custom storage with date handling that correctly implements PersistStorage interface
+const customStorage: PersistStorage<AppointmentState> = {
+  getItem: (name): StorageValue<AppointmentState> | null => {
     const str = localStorage.getItem(name);
     if (!str) return null;
     
@@ -69,10 +69,10 @@ const customStorage = {
     }
     return parsed;
   },
-  setItem: (name: string, value: string) => {
-    localStorage.setItem(name, value);
+  setItem: (name, value): void => {
+    localStorage.setItem(name, JSON.stringify(value));
   },
-  removeItem: (name: string) => {
+  removeItem: (name): void => {
     localStorage.removeItem(name);
   }
 };
