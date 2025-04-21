@@ -1,10 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { MapPinIcon, Clock, Phone, ArrowRight, Navigation, RefreshCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLocation } from '@/context/LocationContext';
 import { useToast } from '@/hooks/use-toast';
-import MapMini, { MapHospital } from '@/components/MapMini';
 
 interface Hospital {
   id: string;
@@ -75,9 +75,7 @@ const NearbyPage: React.FC = () => {
   const { toast } = useToast();
   const { userLocation, requestLocationPermission, isLocating } = useLocation();
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
-  const [mapboxToken, setMapboxToken] = useState<string>('');
-  const [tokenTouched, setTokenTouched] = useState(false);
-
+  
   // Calculate distance between two coordinates in km
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
     const R = 6371; // Radius of the Earth in km
@@ -91,7 +89,7 @@ const NearbyPage: React.FC = () => {
     const distance = R * c;
     return distance.toFixed(1);
   };
-
+  
   // Update hospitals with calculated distances when location changes
   useEffect(() => {
     if (userLocation) {
@@ -131,83 +129,28 @@ const NearbyPage: React.FC = () => {
       setHospitals(sortedHospitals);
     }
   }, [userLocation, toast]);
-
-  // Prepare hospital points for the map
-  const mapHospitals: MapHospital[] = hospitals.map(({ id, name, lat, lng }) => ({
-    id,
-    name,
-    lat,
-    lng,
-  }));
-
+  
   return (
     <MainLayout title="Nearby Hospitals in Bhopal">
       <div className="max-w-lg mx-auto px-4 pb-20 pt-4">
-        <div className="mb-6 space-y-2">
-          {/* ----------- New Map & Token Section ----------- */}
-          <div className="aspect-video bg-gray-200 rounded-xl mb-4 flex flex-col items-center justify-center relative w-full">
-            {mapboxToken ? (
-              <MapMini
-                accessToken={mapboxToken}
-                userCoords={
-                  userLocation
-                    ? { latitude: userLocation.latitude, longitude: userLocation.longitude }
-                    : null
-                }
-                hospitals={mapHospitals}
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col justify-center items-center px-4">
-                <p className="text-care-muted mb-2 text-sm text-center">
-                  To view the map, paste your Mapbox Public Access Token below.{' '}
-                  <span className="font-semibold underline decoration-dotted break-all">
-                    (Find it at{' '}
-                    <a href="https://account.mapbox.com/access-tokens/" target="_blank" className="text-care-primary underline">
-                      mapbox.com
-                    </a>
-                    )
-                  </span>
-                </p>
-                <input
-                  type="text"
-                  placeholder="Mapbox Public Token (pk. ...)"
-                  value={mapboxToken}
-                  onChange={e => { setMapboxToken(e.target.value); setTokenTouched(true); }}
-                  className="w-full max-w-md px-3 py-2 mb-2 border rounded-lg text-sm focus:ring-2 focus:ring-care-primary"
-                  autoFocus={!mapboxToken && !tokenTouched}
-                />
-                {tokenTouched && !mapboxToken && (
-                  <p className="text-xs text-care-error">Please enter your Mapbox public token to load the map.</p>
-                )}
-              </div>
-            )}
-            <div className="absolute top-2 right-2 flex gap-2">
-              {userLocation && (
-                <span className="inline-flex items-center text-xs bg-white/90 px-2 py-1 rounded-md shadow text-care-primary font-semibold">
-                  <Navigation className="h-3 w-3 mr-1" /> You
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className="text-care-muted flex flex-col items-center">
+        <div className="mb-6">
+          <div className="aspect-video bg-gray-200 rounded-xl mb-4 flex items-center justify-center relative">
             {userLocation ? (
-              <>
-                <p>
-                  Your location: {userLocation.latitude.toFixed(4)}, {userLocation.longitude.toFixed(4)}
-                </p>
-                <button
+              <div className="text-care-muted flex flex-col items-center">
+                <Navigation className="h-10 w-10 text-care-primary mb-2" />
+                <p>Your location: {userLocation.latitude.toFixed(4)}, {userLocation.longitude.toFixed(4)}</p>
+                <button 
                   onClick={requestLocationPermission}
                   className="mt-2 flex items-center text-care-primary text-sm"
                 >
                   <RefreshCcw className="h-3 w-3 mr-1" />
                   Update location
                 </button>
-              </>
+              </div>
             ) : (
-              <>
-                <p>Enable your location to get hospital distances</p>
-                <button
+              <div className="text-care-muted flex flex-col items-center">
+                <p>Map of Bhopal would appear here</p>
+                <button 
                   onClick={requestLocationPermission}
                   className="mt-3 px-4 py-2 bg-care-primary text-white rounded-lg flex items-center"
                   disabled={isLocating}
@@ -224,9 +167,10 @@ const NearbyPage: React.FC = () => {
                     </>
                   )}
                 </button>
-              </>
+              </div>
             )}
           </div>
+          
           <p className="text-care-muted text-sm mb-1">
             {userLocation 
               ? "Showing hospitals near your current location" 
