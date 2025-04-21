@@ -1,60 +1,17 @@
-
 import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { CalendarIcon, MapPinIcon, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-
-interface Appointment {
-  id: string;
-  doctorName: string;
-  doctorSpecialty: string;
-  doctorImage: string;
-  hospital: string;
-  date: Date;
-  time: string;
-  status: 'upcoming' | 'completed' | 'cancelled';
-}
-
-// Mock data
-const mockAppointments: Appointment[] = [
-  {
-    id: '1',
-    doctorName: 'Dr. Sarah Johnson',
-    doctorSpecialty: 'Cardiologist',
-    doctorImage: 'https://randomuser.me/api/portraits/women/45.jpg',
-    hospital: 'City Medical Center',
-    date: new Date(new Date().setDate(new Date().getDate() + 2)),
-    time: '10:00 AM',
-    status: 'upcoming'
-  },
-  {
-    id: '2',
-    doctorName: 'Dr. Michael Chen',
-    doctorSpecialty: 'Orthopedic Surgeon',
-    doctorImage: 'https://randomuser.me/api/portraits/men/32.jpg',
-    hospital: 'General Hospital',
-    date: new Date(new Date().setDate(new Date().getDate() - 5)),
-    time: '2:30 PM',
-    status: 'completed'
-  },
-  {
-    id: '3',
-    doctorName: 'Dr. Emily Patel',
-    doctorSpecialty: 'Dermatologist',
-    doctorImage: 'https://randomuser.me/api/portraits/women/37.jpg',
-    hospital: 'Skin & Care Clinic',
-    date: new Date(new Date().setDate(new Date().getDate() - 12)),
-    time: '1:00 PM',
-    status: 'cancelled'
-  }
-];
+import { useAppointmentStore, Appointment } from '@/services/appointmentService';
 
 const AppointmentsPage: React.FC = () => {
   const { toast } = useToast();
   const [selectedTab, setSelectedTab] = useState<'upcoming' | 'past'>('upcoming');
-  const [appointments, setAppointments] = useState<Appointment[]>(mockAppointments);
+  
+  // Get appointments from our service
+  const { appointments, cancelAppointment } = useAppointmentStore();
   
   const upcomingAppointments = appointments.filter(
     appointment => appointment.status === 'upcoming'
@@ -65,12 +22,7 @@ const AppointmentsPage: React.FC = () => {
   );
   
   const handleCancelAppointment = (appointmentId: string) => {
-    // This would be an API call in a real app
-    setAppointments(appointments.map(appointment => 
-      appointment.id === appointmentId 
-        ? { ...appointment, status: 'cancelled' as const } 
-        : appointment
-    ));
+    cancelAppointment(appointmentId);
     
     toast({
       title: "Appointment Cancelled",

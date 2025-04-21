@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from '@/components/ui/separator';
+import { useAppointmentStore } from '@/services/appointmentService';
 
 const mockDoctors: Doctor[] = [
   {
@@ -335,6 +336,7 @@ const BookAppointmentPage: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  const { addAppointment } = useAppointmentStore();
   
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -361,10 +363,23 @@ const BookAppointmentPage: React.FC = () => {
       });
       return;
     }
+
+    if (!doctor) return;
+    
+    addAppointment({
+      doctorName: doctor.name,
+      doctorSpecialty: doctor.specialty,
+      doctorImage: doctor.imageUrl,
+      hospital: doctor.hospital,
+      date: selectedDate,
+      time: selectedTime,
+      status: 'upcoming',
+      reason: reason.trim() || undefined
+    });
     
     toast({
       title: "Appointment Booked Successfully",
-      description: `Your appointment with ${doctor?.name} on ${format(selectedDate, 'PPP')} at ${selectedTime} has been confirmed.`,
+      description: `Your appointment with ${doctor.name} on ${format(selectedDate, 'PPP')} at ${selectedTime} has been confirmed.`,
       variant: "default"
     });
     
