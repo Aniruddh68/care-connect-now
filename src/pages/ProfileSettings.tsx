@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import MainLayout from "@/components/layout/MainLayout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -8,20 +8,55 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Edit2, Save } from "lucide-react";
+import { 
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+
+interface ProfileFormValues {
+  email: string;
+  phone: string;
+  address: string;
+  dob: string;
+}
 
 const ProfileSettings = () => {
   const { toast } = useToast();
-  const [isEditing, setIsEditing] = React.useState(false);
-
-  const handleSave = () => {
+  const [isEditing, setIsEditing] = useState(false);
+  
+  // Default values for the form
+  const defaultValues: ProfileFormValues = {
+    email: "johndoe@example.com",
+    phone: "+91 98765 43210",
+    address: "123 Main St, Bhopal, Madhya Pradesh",
+    dob: "1990-01-15"
+  };
+  
+  const form = useForm<ProfileFormValues>({
+    defaultValues
+  });
+  
+  const handleSave = (values: ProfileFormValues) => {
     setIsEditing(false);
+    console.log("Saved values:", values);
     toast({
       title: "Profile updated",
       description: "Your personal info has been updated successfully.",
     });
   };
+  
+  // Toggle edit mode and reset form when cancelling
+  const toggleEditMode = () => {
+    if (isEditing) {
+      form.reset(defaultValues);
+    }
+    setIsEditing(!isEditing);
+  };
 
-  // Responsive layout with graceful wrapping and mobile-optimized controls
   return (
     <MainLayout title="Personal Info">
       <section className="max-w-xl mx-auto pt-4 pb-20 px-4 sm:px-6 lg:px-0 w-full animate-fade-in">
@@ -39,61 +74,105 @@ const ProfileSettings = () => {
               </div>
             </div>
             <Button
-              variant="ghost"
+              variant={isEditing ? "outline" : "ghost"}
               size="icon"
               className="mt-2 sm:mt-0 self-end"
-              onClick={() => setIsEditing((v) => !v)}
+              onClick={toggleEditMode}
+              aria-label={isEditing ? "Cancel editing" : "Edit profile"}
             >
               {isEditing ? <Save className="h-5 w-5" /> : <Edit2 className="h-5 w-5" />}
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value="johndoe@example.com"
-                  readOnly={!isEditing}
-                  className={!isEditing ? "bg-gray-50" : ""}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value="+91 98765 43210"
-                  readOnly={!isEditing}
-                  className={!isEditing ? "bg-gray-50" : ""}
-                />
-              </div>
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="address">Address</Label>
-                <Input
-                  id="address"
-                  value="123 Main St, Bhopal, Madhya Pradesh"
-                  readOnly={!isEditing}
-                  className={!isEditing ? "bg-gray-50" : ""}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="dob">Date of Birth</Label>
-                <Input
-                  id="dob"
-                  type="date"
-                  value="1990-01-15"
-                  readOnly={!isEditing}
-                  className={!isEditing ? "bg-gray-50" : ""}
-                />
-              </div>
-            </div>
-            {isEditing && (
-              <div className="pt-6 flex justify-end">
-                <Button onClick={handleSave} className="px-8">Save Changes</Button>
-              </div>
-            )}
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleSave)} className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="email" 
+                            readOnly={!isEditing}
+                            className={!isEditing ? "bg-gray-50" : ""}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="tel" 
+                            readOnly={!isEditing}
+                            className={!isEditing ? "bg-gray-50" : ""}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem className="sm:col-span-2">
+                        <FormLabel>Address</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            readOnly={!isEditing}
+                            className={!isEditing ? "bg-gray-50" : ""}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="dob"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Date of Birth</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="date" 
+                            readOnly={!isEditing}
+                            className={!isEditing ? "bg-gray-50" : ""}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                {isEditing && (
+                  <div className="flex justify-end gap-2">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={toggleEditMode}
+                    >
+                      Cancel
+                    </Button>
+                    <Button type="submit">Save Changes</Button>
+                  </div>
+                )}
+              </form>
+            </Form>
           </CardContent>
         </Card>
       </section>
