@@ -54,20 +54,20 @@ interface AppointmentState {
   cancelAppointment: (id: string) => void;
 }
 
-// Custom storage with date handling
+// Custom storage with date handling that matches PersistStorage interface
 const customStorage = {
   getItem: (name: string) => {
     const str = localStorage.getItem(name);
     if (!str) return null;
     
-    const data = JSON.parse(str);
-    if (data.state?.appointments) {
-      data.state.appointments = data.state.appointments.map((apt: any) => ({
+    const parsed = JSON.parse(str);
+    if (parsed.state?.appointments) {
+      parsed.state.appointments = parsed.state.appointments.map((apt: any) => ({
         ...apt,
         date: new Date(apt.date)
       }));
     }
-    return JSON.stringify(data);
+    return parsed;
   },
   setItem: (name: string, value: string) => {
     localStorage.setItem(name, value);
