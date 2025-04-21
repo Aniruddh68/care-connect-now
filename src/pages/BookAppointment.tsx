@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -9,7 +8,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from '@/components/ui/separator';
 
-// Import mock doctors from FindDoctor page
 const mockDoctors: Doctor[] = [
   {
     id: '1',
@@ -372,7 +370,15 @@ const BookAppointmentPage: React.FC = () => {
     
     navigate('/appointments');
   };
-  
+
+  const handlePayment = () => {
+    toast({
+      title: "Payment Integration Coming Soon",
+      description: "Payment processing will be available here.",
+      variant: "default"
+    });
+  };
+
   if (!doctor) {
     return (
       <MainLayout title="Book Appointment">
@@ -484,7 +490,7 @@ const BookAppointmentPage: React.FC = () => {
               />
             </div>
             
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="bg-white rounded-xl shadow-sm p-6 flex flex-col gap-4 md:gap-6">
               <h3 className="font-bold mb-4">Appointment Summary</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
@@ -507,6 +513,15 @@ const BookAppointmentPage: React.FC = () => {
                   <span className="font-medium">{doctor.hospital}</span>
                 </div>
               </div>
+
+              <button
+                type="button"
+                onClick={handlePayment}
+                className="w-full mt-3 primary-button flex items-center justify-center py-3 md:py-4 transition-transform active:scale-[0.98]"
+                aria-label="Pay for Appointment"
+              >
+                Pay Now
+              </button>
             </div>
             
             <button
