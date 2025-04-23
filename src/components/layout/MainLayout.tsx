@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import BottomNav from './BottomNav';
-import { UserIcon, MapPinIcon, CalendarIcon, InfoIcon, WalletCards } from 'lucide-react';
+import { UserIcon, WalletCards } from 'lucide-react';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -23,18 +23,22 @@ const MainLayout: React.FC<MainLayoutProps> = ({
               <img 
                 src="/logo.png" 
                 alt="Care Connect Logo" 
-                className="h-10 w-10 object-contain rounded-full" // Added rounded-full for potential logo styling
+                className="h-10 w-10 object-contain rounded-full"
               />
               <span className="bg-gradient-to-r from-care-primary to-sky-500 bg-clip-text font-bold text-2xl text-cyan-500 text-left">
                 {title}
               </span>
             </Link>
-            <div className="flex space-x-2">
+            <div className="flex items-center space-x-4">
+              <Link 
+                to="/payment" 
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-care-primary text-white hover:bg-sky-600 transition-colors"
+              >
+                <WalletCards className="h-5 w-5" />
+                <span>Payments</span>
+              </Link>
               <Link to="/profile" className="p-2 rounded-full hover:bg-sky-50 transition-colors">
                 <UserIcon className="h-6 w-6 text-care-primary" />
-              </Link>
-              <Link to="/payment" className="p-2 rounded-full hover:bg-sky-50 transition-colors">
-                <WalletCards className="h-6 w-6 text-care-primary" />
               </Link>
             </div>
           </div>
