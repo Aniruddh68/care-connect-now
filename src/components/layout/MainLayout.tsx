@@ -1,12 +1,15 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import BottomNav from './BottomNav';
 import { UserIcon, MapPinIcon, CalendarIcon, InfoIcon } from 'lucide-react';
+
 interface MainLayoutProps {
   children: React.ReactNode;
   hideNav?: boolean;
   title?: string;
 }
+
 const MainLayout: React.FC<MainLayoutProps> = ({
   children,
   hideNav = false,
@@ -16,7 +19,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       <header className="sticky top-0 z-10 bg-white/90 backdrop-blur-sm shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <Link to="/" className="flex items-center transition-transform hover:scale-105">
+            <Link to="/" className="flex items-center space-x-3 transition-transform hover:scale-105">
+              <img 
+                src="/logo.png" 
+                alt="Care Connect Logo" 
+                className="h-10 w-10 object-contain"
+              />
               <span className="bg-gradient-to-r from-care-primary to-sky-500 bg-clip-text font-bold text-2xl text-cyan-500 text-left">
                 {title}
               </span>
@@ -40,4 +48,5 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       {!hideNav && <BottomNav />}
     </div>;
 };
+
 export default MainLayout;
