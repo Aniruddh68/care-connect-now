@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
-import { Calendar, Clock, CheckIcon } from 'lucide-react';
+import { Calendar, Clock, CheckIcon, WalletCards } from 'lucide-react';
 import { Doctor } from '@/components/common/DoctorCard';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
@@ -387,11 +387,7 @@ const BookAppointmentPage: React.FC = () => {
   };
 
   const handlePayment = () => {
-    toast({
-      title: "Payment Integration Coming Soon",
-      description: "Payment processing will be available here.",
-      variant: "default"
-    });
+    navigate('/payment');
   };
 
   if (!doctor) {
@@ -410,15 +406,15 @@ const BookAppointmentPage: React.FC = () => {
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6 animate-fade-in">
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             <img 
-              src={doctor.imageUrl} 
-              alt={doctor.name} 
+              src={doctor?.imageUrl} 
+              alt={doctor?.name} 
               className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-care-primary"
             />
             <div className="flex-1">
-              <h2 className="font-bold text-xl md:text-2xl text-care-dark">{doctor.name}</h2>
-              <p className="text-care-muted text-sm md:text-base">{doctor.specialty}</p>
-              <p className="text-sm text-care-muted">{doctor.hospital}</p>
-              {doctor.availableToday && (
+              <h2 className="font-bold text-xl md:text-2xl text-care-dark">{doctor?.name}</h2>
+              <p className="text-care-muted text-sm md:text-base">{doctor?.specialty}</p>
+              <p className="text-sm text-care-muted">{doctor?.hospital}</p>
+              {doctor?.availableToday && (
                 <span className="inline-block mt-2 text-sm text-care-success bg-green-50 px-2 py-1 rounded">
                   Available today
                 </span>
@@ -520,28 +516,29 @@ const BookAppointmentPage: React.FC = () => {
                 <Separator />
                 <div className="flex justify-between">
                   <span className="text-care-muted">Doctor:</span>
-                  <span className="font-medium">{doctor.name}</span>
+                  <span className="font-medium">{doctor?.name}</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between">
                   <span className="text-care-muted">Location:</span>
-                  <span className="font-medium">{doctor.hospital}</span>
+                  <span className="font-medium">{doctor?.hospital}</span>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={handlePayment}
-                className="w-full mt-3 primary-button flex items-center justify-center py-3 md:py-4 transition-transform active:scale-[0.98]"
+                className="w-full mt-3 bg-care-primary text-white flex items-center justify-center py-3 md:py-4 rounded-xl transition-transform active:scale-[0.98]"
                 aria-label="Pay for Appointment"
               >
+                <WalletCards className="mr-2 h-5 w-5" />
                 Pay Now
               </button>
             </div>
             
             <button
               onClick={handleBookAppointment}
-              className="w-full primary-button flex items-center justify-center py-4 transition-transform active:scale-[0.98]"
+              className="w-full bg-care-primary text-white flex items-center justify-center py-4 rounded-xl transition-transform active:scale-[0.98]"
             >
               <CheckIcon className="mr-2 h-5 w-5" />
               Confirm Appointment

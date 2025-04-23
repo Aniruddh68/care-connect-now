@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -15,6 +16,8 @@ import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import ProfileSettings from "./pages/ProfileSettings";
+import Payment from "./pages/Payment";
+import PaymentHistory from "./pages/PaymentHistory";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +40,8 @@ const App = () => (
               <Route path="/settings/accounts" element={<Settings />} />
               <Route path="/settings/profile" element={<ProfileSettings />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/payment/history" element={<PaymentHistory />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

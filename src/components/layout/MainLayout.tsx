@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import BottomNav from './BottomNav';
-import { UserIcon, MapPinIcon, CalendarIcon, InfoIcon } from 'lucide-react';
+import { UserIcon, MapPinIcon, CalendarIcon, InfoIcon, WalletCards } from 'lucide-react';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -32,6 +32,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             <div className="flex space-x-2">
               <Link to="/profile" className="p-2 rounded-full hover:bg-sky-50 transition-colors">
                 <UserIcon className="h-6 w-6 text-care-primary" />
+              </Link>
+              <Link to="/payment" className="p-2 rounded-full hover:bg-sky-50 transition-colors">
+                <WalletCards className="h-6 w-6 text-care-primary" />
               </Link>
             </div>
           </div>
