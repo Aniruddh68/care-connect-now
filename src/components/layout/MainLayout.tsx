@@ -23,7 +23,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
               <img 
                 src="/logo.png" 
                 alt="Care Connect Logo" 
-                className="h-10 w-10 object-contain"
+                className="h-10 w-10 object-contain rounded-full" // Added rounded-full for potential logo styling
               />
               <span className="bg-gradient-to-r from-care-primary to-sky-500 bg-clip-text font-bold text-2xl text-cyan-500 text-left">
                 {title}
