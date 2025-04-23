@@ -23,24 +23,39 @@ const MainLayout: React.FC<MainLayoutProps> = ({
               <img 
                 src="/logo.png" 
                 alt="Care Connect Logo" 
-                className="h-10 w-10 object-contain rounded-full"
+                className="h-10 w-10 object-contain rounded-full shadow-sm border border-gray-100"
               />
-              <span className="bg-gradient-to-r from-care-primary to-sky-500 bg-clip-text font-bold text-2xl text-cyan-500 text-left">
+              <span className="bg-gradient-to-r from-care-primary to-sky-500 bg-clip-text font-bold text-2xl text-transparent">
                 {title}
               </span>
             </Link>
-            <div className="flex items-center space-x-4">
+            
+            <nav className="flex items-center space-x-2 sm:space-x-4">
+              <Link 
+                to="/payment/history" 
+                className="hidden sm:flex items-center space-x-2 px-3 py-2 text-sm text-care-primary hover:text-sky-600 transition-colors"
+              >
+                <span>History</span>
+              </Link>
+              
               <Link 
                 to="/payment" 
-                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-care-primary text-white hover:bg-sky-600 transition-colors"
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-care-primary to-sky-500 text-white hover:opacity-90 transition shadow-sm"
               >
                 <WalletCards className="h-5 w-5" />
-                <span>Payments</span>
+                <span className="hidden sm:inline">Payments</span>
               </Link>
-              <Link to="/profile" className="p-2 rounded-full hover:bg-sky-50 transition-colors">
+              
+              <div className="h-8 w-px bg-gray-200 mx-1 hidden sm:block" />
+              
+              <Link 
+                to="/profile" 
+                className="p-2 rounded-full hover:bg-sky-50 transition-colors"
+                aria-label="Profile"
+              >
                 <UserIcon className="h-6 w-6 text-care-primary" />
               </Link>
-            </div>
+            </nav>
           </div>
         </div>
       </header>
