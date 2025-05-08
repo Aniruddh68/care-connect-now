@@ -24,11 +24,11 @@ const queryClient = new QueryClient();
 const App = () => (
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <LocationProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+      <BrowserRouter>
+        <TooltipProvider>
+          <LocationProvider>
+            <Toaster />
+            <Sonner />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/find" element={<FindDoctor />} />
@@ -44,9 +44,9 @@ const App = () => (
               <Route path="/payment/history" element={<PaymentHistory />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </BrowserRouter>
-        </LocationProvider>
-      </TooltipProvider>
+          </LocationProvider>
+        </TooltipProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>
 );
