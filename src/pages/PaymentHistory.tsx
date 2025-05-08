@@ -33,8 +33,9 @@ const PaymentHistory = () => {
 
   // Generate a payment URL for the QR code
   const getPaymentUrl = (payment: PaymentRecord) => {
-    const upiId = 'aniruddhgupta148@ybl';
-    return `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payment.recipient)}&am=${payment.amount}&cu=INR&tn=Payment%20for%20Care%20Connect%20Services`;
+    const upiId = payment.recipient.includes('@') ? payment.recipient : 'aniruddhgupta148@ybl';
+    const payeeName = payment.recipient.includes('@') ? 'Custom Recipient' : payment.recipient;
+    return `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${payment.amount}&cu=INR&tn=Payment%20for%20Care%20Connect%20Services`;
   };
 
   return (

@@ -14,6 +14,8 @@ const Payment = () => {
   const [amount, setAmount] = useState('');
   const [paymentMode, setPaymentMode] = useState<'upi' | 'qr'>('upi');
   const upiId = 'aniruddhgupta148@ybl';
+  const [customUpiId, setCustomUpiId] = useState('');
+  const [showNotification, setShowNotification] = useState(false);
   
   const handlePayment = () => {
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
@@ -25,15 +27,39 @@ const Payment = () => {
       return;
     }
     
-    // In a real app, this would integrate with a payment gateway
-    // For now, we'll just show a success toast
-    toast({
-      title: "Payment Initiated",
-      description: `Payment of ₹${amount} initiated via ${paymentMode === 'upi' ? 'UPI' : 'QR Code'}.`,
-      variant: "default"
-    });
-    
-    // Store payment in local storage for history
+    // Simulate UPI payment notification
+    if (paymentMode === 'upi' && customUpiId) {
+      toast({
+        title: "UPI Payment Notification",
+        description: `A payment request of ₹${amount} has been sent to ${customUpiId}`,
+        variant: "default"
+      });
+
+      // Simulate payment success after 2 seconds
+      setTimeout(() => {
+        toast({
+          title: "Payment Successful!",
+          description: `Payment of ₹${amount} to ${customUpiId} completed successfully.`,
+          variant: "default"
+        });
+        
+        // Store payment in local storage for history
+        savePaymentToHistory(customUpiId);
+      }, 2000);
+    } else {
+      // Original code for default UPI
+      toast({
+        title: "Payment Initiated",
+        description: `Payment of ₹${amount} initiated via ${paymentMode === 'upi' ? 'UPI' : 'QR Code'}.`,
+        variant: "default"
+      });
+      
+      // Store payment in local storage for history
+      savePaymentToHistory('Care Connect Bhopal');
+    }
+  };
+
+  const savePaymentToHistory = (recipient: string) => {
     const paymentHistory = JSON.parse(localStorage.getItem('paymentHistory') || '[]');
     paymentHistory.push({
       id: Date.now().toString(),
@@ -41,19 +67,22 @@ const Payment = () => {
       mode: paymentMode,
       status: 'completed',
       timestamp: new Date().toISOString(),
-      recipient: 'Care Connect Bhopal'
+      recipient: recipient
     });
     localStorage.setItem('paymentHistory', JSON.stringify(paymentHistory));
     
     // Reset form
     setAmount('');
+    setCustomUpiId('');
   };
 
   // Generate a payment URL for the QR code
   const getPaymentUrl = () => {
     // Format according to UPI deep linking specifications
     // pa = Payment Address, pn = Payee Name, am = Amount, cu = Currency, tn = Transaction Note
-    const baseUrl = `upi://pay?pa=${upiId}&pn=Care%20Connect%20Bhopal`;
+    const payeeUpi = customUpiId || upiId;
+    const payeeName = customUpiId ? 'Custom Recipient' : 'Care Connect Bhopal';
+    const baseUrl = `upi://pay?pa=${payeeUpi}&pn=${encodeURIComponent(payeeName)}`;
     const amountPart = amount && !isNaN(Number(amount)) ? `&am=${amount}` : '';
     return `${baseUrl}${amountPart}&cu=INR&tn=Payment%20for%20Care%20Connect%20Services`;
   };
@@ -108,6 +137,25 @@ const Payment = () => {
                       min="1"
                     />
                   </div>
+                  
+                  {paymentMode === 'upi' && (
+                    <div>
+                      <label htmlFor="upiId" className="block text-sm font-medium mb-1">
+                        Custom UPI ID (Optional)
+                      </label>
+                      <Input
+                        id="upiId"
+                        type="text"
+                        value={customUpiId}
+                        onChange={(e) => setCustomUpiId(e.target.value)}
+                        className="w-full"
+                        placeholder="Enter recipient's UPI ID"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Leave empty to use our default UPI ID
+                      </p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
               <CardFooter>
@@ -130,7 +178,7 @@ const Payment = () => {
                 {paymentMode === 'upi' ? (
                   <div className="text-center">
                     <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                      <p className="font-medium text-care-dark break-all">{upiId}</p>
+                      <p className="font-medium text-care-dark break-all">{customUpiId || upiId}</p>
                     </div>
                     <p className="text-sm text-gray-500">Enter this UPI ID in your payment app</p>
                   </div>
