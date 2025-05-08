@@ -4,10 +4,12 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Hospital } from '@/pages/Nearby';
 import { useToast } from '@/hooks/use-toast';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { AlertCircle } from 'lucide-react';
 
-// Replace with your public Mapbox token
-// This should ideally be in an environment variable
-const MAPBOX_TOKEN = 'pk.eyJ1IjoiZGVtby1sb3ZhYmxlIiwiYSI6ImNsbWV3a3RxeTBieDUza3BiZWRtN3huZXcifQ.8ZfrwOBnGGO6u3IaLdSdyA';
+// Initial Mapbox token - might be invalid
+const DEFAULT_MAPBOX_TOKEN = 'pk.eyJ1IjoiZGVtby1sb3ZhYmxlIiwiYSI6ImNsbWV3a3RxeTBieDUza3BiZWRtN3huZXcifQ.8ZfrwOBnGGO6u3IaLdSdyA';
 
 interface HospitalMapProps {
   userLocation: GeolocationCoordinates | null;
@@ -20,13 +22,26 @@ const HospitalMap: React.FC<HospitalMapProps> = ({ userLocation, hospitals }) =>
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const { toast } = useToast();
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [tokenError, setTokenError] = useState(false);
+  const [mapboxToken, setMapboxToken] = useState(DEFAULT_MAPBOX_TOKEN);
+  const [customToken, setCustomToken] = useState("");
 
-  // Initialize map when component mounts
-  useEffect(() => {
+  const initializeMap = () => {
     if (!mapContainer.current) return;
+    
+    // Clear existing map if any
+    if (map.current) {
+      markersRef.current.forEach(marker => marker.remove());
+      map.current.remove();
+      map.current = null;
+      markersRef.current = [];
+    }
 
     try {
-      mapboxgl.accessToken = MAPBOX_TOKEN;
+      setMapLoaded(false);
+      setTokenError(false);
+      
+      mapboxgl.accessToken = mapboxToken;
       
       const initialLocation = userLocation ? 
         [userLocation.longitude, userLocation.latitude] : 
@@ -43,24 +58,32 @@ const HospitalMap: React.FC<HospitalMapProps> = ({ userLocation, hospitals }) =>
       
       map.current.on('load', () => {
         setMapLoaded(true);
+        updateMarkers();
       });
-
-      return () => {
-        markersRef.current.forEach(marker => marker.remove());
-        map.current?.remove();
-      };
+      
+      map.current.on('error', (e) => {
+        console.error('Mapbox error:', e);
+        if (e.error && (e.error.status === 401 || e.error.message.includes('access token'))) {
+          setTokenError(true);
+          toast({
+            title: "Invalid Mapbox Token",
+            description: "Please enter your own Mapbox token below.",
+            variant: "destructive"
+          });
+        }
+      });
     } catch (error) {
+      console.error("Map initialization error:", error);
+      setTokenError(true);
       toast({
         title: "Map Error",
-        description: "There was an error loading the map. Please try again later.",
+        description: "There was an error loading the map. Please try again with your own Mapbox token.",
         variant: "destructive"
       });
-      console.error("Map initialization error:", error);
     }
-  }, []);
+  };
 
-  // Update map when user location changes
-  useEffect(() => {
+  const updateMarkers = () => {
     if (!map.current || !mapLoaded) return;
     
     try {
@@ -120,14 +143,84 @@ const HospitalMap: React.FC<HospitalMapProps> = ({ userLocation, hospitals }) =>
     } catch (error) {
       console.error("Error updating markers:", error);
     }
+  };
+
+  // Initialize map when component mounts or token changes
+  useEffect(() => {
+    initializeMap();
+    
+    return () => {
+      if (map.current) {
+        markersRef.current.forEach(marker => marker.remove());
+        map.current.remove();
+      }
+    };
+  }, [mapboxToken]);
+
+  // Update markers when user location or hospitals change
+  useEffect(() => {
+    updateMarkers();
   }, [userLocation, hospitals, mapLoaded]);
+
+  const handleSubmitToken = () => {
+    if (customToken && customToken.trim() !== '') {
+      setMapboxToken(customToken.trim());
+      toast({
+        title: "Token Updated",
+        description: "Applying your Mapbox token now."
+      });
+    } else {
+      toast({
+        title: "Invalid Token",
+        description: "Please enter a valid Mapbox token",
+        variant: "destructive"
+      });
+    }
+  };
 
   return (
     <div className="relative w-full h-full rounded-xl overflow-hidden">
       <div ref={mapContainer} className="absolute inset-0" />
-      {!mapLoaded && (
+      
+      {/* Loading indicator */}
+      {!mapLoaded && !tokenError && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-care-primary"></div>
+        </div>
+      )}
+      
+      {/* Token error UI */}
+      {tokenError && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 p-4">
+          <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
+            <div className="flex items-center mb-4 text-red-600">
+              <AlertCircle className="h-5 w-5 mr-2" />
+              <h3 className="font-bold">Mapbox Token Required</h3>
+            </div>
+            
+            <p className="text-sm mb-4">
+              To use the map feature, you need to provide your own Mapbox token. 
+              Visit <a href="https://account.mapbox.com/" target="_blank" rel="noopener noreferrer" className="text-care-primary underline">
+                mapbox.com
+              </a> and get your public token from the dashboard.
+            </p>
+            
+            <div className="space-y-3">
+              <Input
+                placeholder="Enter your Mapbox token here"
+                value={customToken}
+                onChange={(e) => setCustomToken(e.target.value)}
+                className="w-full"
+              />
+              
+              <Button 
+                onClick={handleSubmitToken} 
+                className="w-full bg-care-primary hover:bg-care-primary/90"
+              >
+                Apply Token
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>
