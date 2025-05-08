@@ -1,12 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { MapPinIcon, Clock, Phone, ArrowRight, Navigation, RefreshCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLocation } from '@/context/LocationContext';
 import { useToast } from '@/hooks/use-toast';
+import HospitalMap from '@/components/map/HospitalMap';
 
-interface Hospital {
+export interface Hospital {
   id: string;
   name: string;
   address: string;
@@ -134,25 +134,15 @@ const NearbyPage: React.FC = () => {
     <MainLayout title="Nearby Hospitals in Bhopal">
       <div className="max-w-lg mx-auto px-4 pb-20 pt-4">
         <div className="mb-6">
-          <div className="aspect-video bg-gray-200 rounded-xl mb-4 flex items-center justify-center relative">
-            {userLocation ? (
-              <div className="text-care-muted flex flex-col items-center">
-                <Navigation className="h-10 w-10 text-care-primary mb-2" />
-                <p>Your location: {userLocation.latitude.toFixed(4)}, {userLocation.longitude.toFixed(4)}</p>
+          <div className="aspect-video bg-gray-200 rounded-xl mb-4 relative overflow-hidden">
+            <HospitalMap userLocation={userLocation} hospitals={hospitals} />
+            
+            {!userLocation && (
+              <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white">
+                <p className="mb-3">Enable location to see nearby hospitals</p>
                 <button 
                   onClick={requestLocationPermission}
-                  className="mt-2 flex items-center text-care-primary text-sm"
-                >
-                  <RefreshCcw className="h-3 w-3 mr-1" />
-                  Update location
-                </button>
-              </div>
-            ) : (
-              <div className="text-care-muted flex flex-col items-center">
-                <p>Map of Bhopal would appear here</p>
-                <button 
-                  onClick={requestLocationPermission}
-                  className="mt-3 px-4 py-2 bg-care-primary text-white rounded-lg flex items-center"
+                  className="px-4 py-2 bg-care-primary text-white rounded-lg flex items-center"
                   disabled={isLocating}
                 >
                   {isLocating ? (
