@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { WalletIcon, QrCodeIcon, CreditCard, Wallet, WalletCards } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { QRCodeSVG } from 'qrcode.react';
 
 const Payment = () => {
   const { toast } = useToast();
@@ -46,6 +47,15 @@ const Payment = () => {
     
     // Reset form
     setAmount('');
+  };
+
+  // Generate a payment URL for the QR code
+  const getPaymentUrl = () => {
+    // Format according to UPI deep linking specifications
+    // pa = Payment Address, pn = Payee Name, am = Amount, cu = Currency, tn = Transaction Note
+    const baseUrl = `upi://pay?pa=${upiId}&pn=Care%20Connect%20Bhopal`;
+    const amountPart = amount && !isNaN(Number(amount)) ? `&am=${amount}` : '';
+    return `${baseUrl}${amountPart}&cu=INR&tn=Payment%20for%20Care%20Connect%20Services`;
   };
 
   return (
@@ -126,13 +136,15 @@ const Payment = () => {
                   </div>
                 ) : (
                   <div className="text-center">
-                    <div className="bg-white w-48 h-48 border-2 border-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                      {/* QR code placeholder - in a real app, generate a QR for the UPI ID */}
-                      <div className="text-xs text-gray-400 p-2 text-center">
-                        QR for UPI ID: {upiId}
-                        <br />
-                        (This would be an actual QR code in production)
-                      </div>
+                    <div className="bg-white border-2 border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-center">
+                      <QRCodeSVG 
+                        value={getPaymentUrl()}
+                        size={160}
+                        bgColor="#FFFFFF"
+                        fgColor="#000000"
+                        level="M"
+                        includeMargin={false}
+                      />
                     </div>
                     <p className="text-sm text-gray-500">Scan this QR code with any UPI app</p>
                   </div>

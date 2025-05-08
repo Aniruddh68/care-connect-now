@@ -10,7 +10,9 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { format } from 'date-fns';
-import { WalletCards } from 'lucide-react';
+import { WalletCards, QrCode } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface PaymentRecord {
   id: string;
@@ -28,6 +30,12 @@ const PaymentHistory = () => {
     const savedPayments = JSON.parse(localStorage.getItem('paymentHistory') || '[]');
     setPayments(savedPayments);
   }, []);
+
+  // Generate a payment URL for the QR code
+  const getPaymentUrl = (payment: PaymentRecord) => {
+    const upiId = 'aniruddhgupta148@ybl';
+    return `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payment.recipient)}&am=${payment.amount}&cu=INR&tn=Payment%20for%20Care%20Connect%20Services`;
+  };
 
   return (
     <MainLayout title="Payment History">
@@ -48,6 +56,7 @@ const PaymentHistory = () => {
                     <TableHead>Payment Mode</TableHead>
                     <TableHead>Recipient</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>QR</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -66,6 +75,30 @@ const PaymentHistory = () => {
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                           {payment.status}
                         </span>
+                      </TableCell>
+                      <TableCell>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <button className="p-1 rounded-full hover:bg-gray-100">
+                              <QrCode className="h-4 w-4 text-care-primary" />
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-3">
+                            <div className="p-2">
+                              <QRCodeSVG 
+                                value={getPaymentUrl(payment)}
+                                size={120}
+                                bgColor="#FFFFFF"
+                                fgColor="#000000"
+                                level="M"
+                                includeMargin={false}
+                              />
+                            </div>
+                            <p className="text-xs text-center text-gray-500 mt-2">
+                              Receipt QR for ₹{payment.amount}
+                            </p>
+                          </PopoverContent>
+                        </Popover>
                       </TableCell>
                     </TableRow>
                   ))}
