@@ -63,7 +63,7 @@ const HospitalMap: React.FC<HospitalMapProps> = ({ userLocation, hospitals }) =>
       
       map.current.on('error', (e) => {
         console.error('Mapbox error:', e);
-        if (e.error && (e.error.status === 401 || e.error.message.includes('access token'))) {
+        if (e.error && (e.error.message.includes('401') || e.error.message.includes('access token'))) {
           setTokenError(true);
           toast({
             title: "Invalid Mapbox Token",
