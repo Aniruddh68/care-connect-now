@@ -29,12 +29,20 @@ const HospitalMap: React.FC<HospitalMapProps> = ({ userLocation, hospitals }) =>
   const initializeMap = () => {
     if (!mapContainer.current) return;
     
-    // Clear existing map if any
-    if (map.current) {
+    // Clear existing markers first
+    if (markersRef.current.length) {
       markersRef.current.forEach(marker => marker.remove());
-      map.current.remove();
-      map.current = null;
       markersRef.current = [];
+    }
+    
+    // Safely remove existing map if any
+    if (map.current) {
+      try {
+        map.current.remove();
+      } catch (error) {
+        console.error("Error removing map:", error);
+      }
+      map.current = null;
     }
 
     try {
@@ -149,11 +157,19 @@ const HospitalMap: React.FC<HospitalMapProps> = ({ userLocation, hospitals }) =>
   useEffect(() => {
     initializeMap();
     
+    // Cleanup function that doesn't try to remove map
+    // This avoids the "indoor" property error
     return () => {
-      if (map.current) {
-        markersRef.current.forEach(marker => marker.remove());
-        map.current.remove();
+      if (markersRef.current.length) {
+        markersRef.current.forEach(marker => {
+          try {
+            marker.remove();
+          } catch (e) {
+            console.error("Error removing marker:", e);
+          }
+        });
       }
+      // We don't call map.current.remove() here to avoid the error
     };
   }, [mapboxToken]);
 
