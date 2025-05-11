@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { MapPinIcon, Clock, Phone, ArrowRight, Navigation, RefreshCcw } from 'lucide-react';
@@ -68,6 +69,128 @@ const mockHospitals: Hospital[] = [
     hours: 'Open 24 hours',
     lat: 23.2431,
     lng: 77.4347
+  },
+  // Adding MIMS Hospital near RGPV
+  {
+    id: '5',
+    name: 'MIMS Hospital',
+    address: 'Near RGPV Campus, Airport Road, Bhopal',
+    distance: '4.5 miles',
+    availableDoctors: 7,
+    phone: '(0755) 345-6789',
+    open: true,
+    hours: 'Open 24 hours',
+    lat: 23.2461,
+    lng: 77.4846
+  },
+  // Adding 9 more hospitals across Bhopal
+  {
+    id: '6',
+    name: 'Hamidia Hospital',
+    address: 'Royal Market, Hamidia Road, Bhopal',
+    distance: '3.2 miles',
+    availableDoctors: 10,
+    phone: '(0755) 222-3344',
+    open: true,
+    hours: 'Open 24 hours',
+    lat: 23.2599,
+    lng: 77.3966
+  },
+  {
+    id: '7',
+    name: 'Jawaharlal Nehru Hospital',
+    address: 'Kolar Road, Bhopal',
+    distance: '5.1 miles',
+    availableDoctors: 6,
+    phone: '(0755) 555-6677',
+    open: true,
+    hours: '8:00 AM - 9:00 PM',
+    lat: 23.1625,
+    lng: 77.4245
+  },
+  {
+    id: '8',
+    name: 'Chirayu Medical College & Hospital',
+    address: 'Bairagarh, Bhopal',
+    distance: '7.2 miles',
+    availableDoctors: 12,
+    phone: '(0755) 777-8899',
+    open: true,
+    hours: 'Open 24 hours',
+    lat: 23.2861,
+    lng: 77.3224
+  },
+  {
+    id: '9',
+    name: 'L.N. Medical College & Hospital',
+    address: 'Kolar Road, Bhopal',
+    distance: '6.3 miles',
+    availableDoctors: 8,
+    phone: '(0755) 999-0011',
+    open: true,
+    hours: 'Open 24 hours',
+    lat: 23.1753,
+    lng: 77.4325
+  },
+  {
+    id: '10',
+    name: 'Bhopal Care Hospital',
+    address: 'MP Nagar Zone II, Bhopal',
+    distance: '2.1 miles',
+    availableDoctors: 5,
+    phone: '(0755) 444-5566',
+    open: true,
+    hours: '9:00 AM - 9:00 PM',
+    lat: 23.2312,
+    lng: 77.4356
+  },
+  {
+    id: '11',
+    name: 'People\'s General Hospital',
+    address: 'Shahpura, Bhopal',
+    distance: '3.4 miles',
+    availableDoctors: 6,
+    phone: '(0755) 666-7788',
+    open: true,
+    hours: 'Open 24 hours',
+    lat: 23.2131,
+    lng: 77.4554
+  },
+  {
+    id: '12',
+    name: 'Bansal Hospital',
+    address: 'C-Sector, Shahpura, Bhopal',
+    distance: '4.2 miles',
+    availableDoctors: 9,
+    phone: '(0755) 888-9900',
+    open: true,
+    hours: 'Open 24 hours',
+    lat: 23.2023,
+    lng: 77.4583
+  },
+  {
+    id: '13',
+    name: 'Narmada Hospital',
+    address: 'Habibganj, Bhopal',
+    distance: '2.9 miles',
+    availableDoctors: 4,
+    phone: '(0755) 111-2233',
+    open: true,
+    hours: '8:00 AM - 8:00 PM',
+    lat: 23.2336,
+    lng: 77.4294
+  },
+  {
+    id: '14',
+    name: 'Noble Multispeciality Hospital',
+    address: 'Misrod, Bhopal',
+    distance: '5.7 miles',
+    availableDoctors: 7,
+    phone: '(0755) 333-4455',
+    open: true,
+    hours: 'Open 24 hours',
+    lat: 23.1862,
+    lng: 77.4732
   }
 ];
 
