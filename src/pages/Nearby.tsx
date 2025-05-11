@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { MapPinIcon, Clock, Phone, ArrowRight, Navigation, RefreshCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLocation } from '@/context/LocationContext';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 import HospitalMap from '@/components/map/HospitalMap';
 
 export interface Hospital {
@@ -198,6 +198,8 @@ const NearbyPage: React.FC = () => {
   const { toast } = useToast();
   const { userLocation, requestLocationPermission, isLocating } = useLocation();
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const isMobile = useIsMobile();
   
   // Calculate distance between two coordinates in km
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
@@ -253,11 +255,15 @@ const NearbyPage: React.FC = () => {
     }
   }, [userLocation, toast]);
   
+  const toggleCardExpansion = (id: string) => {
+    setExpandedCard(currentId => currentId === id ? null : id);
+  };
+  
   return (
     <MainLayout title="Nearby Hospitals in Bhopal">
       <div className="max-w-lg mx-auto px-4 pb-20 pt-4">
         <div className="mb-6">
-          <div className="aspect-video bg-gray-200 rounded-xl mb-4 relative overflow-hidden">
+          <div className={`${isMobile ? 'h-64' : 'aspect-video'} bg-gray-200 rounded-xl mb-4 relative overflow-hidden`}>
             <HospitalMap userLocation={userLocation} hospitals={hospitals} />
             
             {!userLocation && (
@@ -284,18 +290,30 @@ const NearbyPage: React.FC = () => {
             )}
           </div>
           
-          <p className="text-care-muted text-sm mb-1">
-            {userLocation 
-              ? "Showing hospitals near your current location" 
-              : "Showing hospitals near default location in Bhopal"}
-          </p>
-          <button 
-            onClick={requestLocationPermission} 
-            className="text-care-primary text-sm font-medium"
-            disabled={isLocating}
-          >
-            {isLocating ? "Locating..." : "Update location"}
-          </button>
+          <div className="flex items-center justify-between">
+            <p className="text-care-muted text-sm">
+              {userLocation 
+                ? "Showing hospitals near your current location" 
+                : "Showing hospitals near default location in Bhopal"}
+            </p>
+            <button 
+              onClick={requestLocationPermission} 
+              className="text-care-primary text-sm font-medium flex items-center gap-1"
+              disabled={isLocating}
+            >
+              {isLocating ? (
+                <>
+                  <div className="h-3 w-3 rounded-full border-2 border-care-primary border-t-transparent animate-spin"></div>
+                  <span>Locating...</span>
+                </>
+              ) : (
+                <>
+                  <RefreshCcw className="h-3 w-3" />
+                  <span>Update</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
         
         <div>
@@ -303,68 +321,156 @@ const NearbyPage: React.FC = () => {
             Nearby Hospitals in Bhopal ({hospitals.length})
           </h2>
           
-          {hospitals.map(hospital => (
-            <div key={hospital.id} className="bg-white rounded-xl shadow p-4 mb-4 card-hover">
-              <h3 className="font-bold text-lg">{hospital.name}</h3>
-              
-              <div className="flex items-center text-sm text-care-muted mt-1 mb-2">
-                <MapPinIcon className="h-4 w-4 mr-1" />
-                <span>{hospital.address} • {hospital.distance}</span>
-              </div>
-              
-              <div className="flex items-center text-sm mb-2">
-                <Clock className="h-4 w-4 mr-2 text-care-muted" />
-                {hospital.open ? (
-                  <span className="text-care-success">{hospital.hours}</span>
-                ) : (
-                  <span className="text-care-error">Closed now</span>
-                )}
-              </div>
-              
-              <div className="flex items-center text-sm mb-3">
-                <span className="text-care-primary font-medium">
-                  {hospital.availableDoctors} doctors available
-                </span>
-              </div>
-              
-              <div className="flex gap-4 mt-3">
-                <button 
-                  onClick={() => {
-                    if (userLocation) {
-                      // This would use real map navigation in a production app
-                      window.open(`https://www.google.com/maps/dir/${userLocation.latitude},${userLocation.longitude}/${hospital.lat},${hospital.lng}`);
-                    } else {
-                      toast({
-                        title: "Location required",
-                        description: "Please enable location to get directions",
-                        variant: "destructive"
-                      });
-                      requestLocationPermission();
-                    }
-                  }}
-                  className="flex-1 primary-button py-2 flex items-center justify-center"
+          {isMobile ? (
+            <div className="space-y-3">
+              {hospitals.map(hospital => (
+                <div 
+                  key={hospital.id} 
+                  className={`bg-white rounded-xl shadow p-3 card-hover transition-all ${
+                    expandedCard === hospital.id ? 'ring-2 ring-care-primary' : ''
+                  }`}
                 >
-                  <MapPinIcon className="mr-2 h-4 w-4" />
-                  Directions
-                </button>
-                <a 
-                  href={`tel:${hospital.phone}`}
-                  className="flex-1 secondary-button py-2 flex items-center justify-center"
-                >
-                  <Phone className="mr-2 h-4 w-4" />
-                  Call
-                </a>
-              </div>
-              
-              <Link 
-                to={`/find?hospital=${hospital.id}`}
-                className="mt-3 w-full py-2 flex justify-center items-center bg-gray-100 text-care-dark rounded-lg"
-              >
-                View Available Doctors
-                <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
+                  <div 
+                    className="flex justify-between items-start cursor-pointer"
+                    onClick={() => toggleCardExpansion(hospital.id)}
+                  >
+                    <div>
+                      <h3 className="font-bold">{hospital.name}</h3>
+                      <div className="flex items-center text-xs text-care-muted mt-0.5">
+                        <MapPinIcon className="h-3 w-3 mr-1 flex-shrink-0" />
+                        <span className="truncate">{hospital.address}</span>
+                      </div>
+                    </div>
+                    <span className="bg-gray-100 text-care-dark text-xs font-medium px-2 py-1 rounded-full">
+                      {hospital.distance}
+                    </span>
+                  </div>
+                  
+                  {expandedCard === hospital.id && (
+                    <div className="mt-3 pt-3 border-t border-gray-100 space-y-3 animate-fade-in">
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center">
+                          <Clock className="h-4 w-4 mr-2 text-care-muted" />
+                          {hospital.open ? (
+                            <span className="text-care-success">{hospital.hours}</span>
+                          ) : (
+                            <span className="text-care-error">Closed now</span>
+                          )}
+                        </div>
+                        <span className="text-care-primary font-medium">
+                          {hospital.availableDoctors} doctors
+                        </span>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (userLocation) {
+                              window.open(`https://www.google.com/maps/dir/${userLocation.latitude},${userLocation.longitude}/${hospital.lat},${hospital.lng}`);
+                            } else {
+                              toast({
+                                title: "Location required",
+                                description: "Please enable location to get directions",
+                                variant: "destructive"
+                              });
+                              requestLocationPermission();
+                            }
+                          }}
+                          className="flex-1 primary-button py-2 flex items-center justify-center text-sm"
+                        >
+                          <Navigation className="mr-1 h-4 w-4" />
+                          Directions
+                        </button>
+                        <a 
+                          href={`tel:${hospital.phone}`}
+                          className="flex-1 secondary-button py-2 flex items-center justify-center text-sm"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Phone className="mr-1 h-4 w-4" />
+                          Call
+                        </a>
+                      </div>
+                      
+                      <Link 
+                        to={`/find?hospital=${hospital.id}`}
+                        className="w-full py-2 flex justify-center items-center bg-gray-100 text-care-dark rounded-lg text-sm"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        View Available Doctors
+                        <ArrowRight className="ml-1 h-4 w-4" />
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
+          ) : (
+            // Desktop view - keep existing layout
+            <div>
+              {hospitals.map(hospital => (
+                <div key={hospital.id} className="bg-white rounded-xl shadow p-4 mb-4 card-hover">
+                  <h3 className="font-bold text-lg">{hospital.name}</h3>
+                  
+                  <div className="flex items-center text-sm text-care-muted mt-1 mb-2">
+                    <MapPinIcon className="h-4 w-4 mr-1" />
+                    <span>{hospital.address} • {hospital.distance}</span>
+                  </div>
+                  
+                  <div className="flex items-center text-sm mb-2">
+                    <Clock className="h-4 w-4 mr-2 text-care-muted" />
+                    {hospital.open ? (
+                      <span className="text-care-success">{hospital.hours}</span>
+                    ) : (
+                      <span className="text-care-error">Closed now</span>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center text-sm mb-3">
+                    <span className="text-care-primary font-medium">
+                      {hospital.availableDoctors} doctors available
+                    </span>
+                  </div>
+                  
+                  <div className="flex gap-4 mt-3">
+                    <button 
+                      onClick={() => {
+                        if (userLocation) {
+                          window.open(`https://www.google.com/maps/dir/${userLocation.latitude},${userLocation.longitude}/${hospital.lat},${hospital.lng}`);
+                        } else {
+                          toast({
+                            title: "Location required",
+                            description: "Please enable location to get directions",
+                            variant: "destructive"
+                          });
+                          requestLocationPermission();
+                        }
+                      }}
+                      className="flex-1 primary-button py-2 flex items-center justify-center"
+                    >
+                      <MapPinIcon className="mr-2 h-4 w-4" />
+                      Directions
+                    </button>
+                    <a 
+                      href={`tel:${hospital.phone}`}
+                      className="flex-1 secondary-button py-2 flex items-center justify-center"
+                    >
+                      <Phone className="mr-2 h-4 w-4" />
+                      Call
+                    </a>
+                  </div>
+                  
+                  <Link 
+                    to={`/find?hospital=${hospital.id}`}
+                    className="mt-3 w-full py-2 flex justify-center items-center bg-gray-100 text-care-dark rounded-lg"
+                  >
+                    View Available Doctors
+                    <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </MainLayout>
