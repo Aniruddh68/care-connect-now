@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { UserPlus, UserMinus, Edit, Search, Plus } from 'lucide-react';
@@ -285,7 +284,19 @@ const AdminDoctors: React.FC = () => {
                   id="active" 
                   checked={newDoctor.status === 'active'} 
                   onCheckedChange={(checked) => 
-                    setNewDoctor({...newDoctor, status: checked ? 'active' : 'inactive' as const})
+                    setNewDoctor({...newDoctor, status: checked ? 'active' : 'inactive'} as { 
+                      name: string; 
+                      specialty: string; 
+                      imageUrl: string; 
+                      hospital: string;
+                      distance: string;
+                      availableToday: boolean;
+                      rating: number;
+                      status: 'active' | 'inactive';
+                      email: string;
+                      phone: string;
+                      bio: string;
+                    })
                   } 
                 />
                 <label htmlFor="active" className="text-sm font-medium">
