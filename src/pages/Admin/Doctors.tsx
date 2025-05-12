@@ -24,7 +24,7 @@ const AdminDoctors: React.FC = () => {
     distance: '0 km',
     availableToday: true,
     rating: 4.5,
-    status: 'active' as const,
+    status: 'active' as const, // Fix: explicitly type as const so TypeScript knows it's 'active' | 'inactive'
     email: '',
     phone: '',
     bio: ''
