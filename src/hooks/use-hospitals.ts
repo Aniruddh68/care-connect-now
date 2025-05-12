@@ -2,8 +2,9 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from '@/context/LocationContext';
+import { Hospital as HospitalType } from '@/types/hospital';
 
-export interface Hospital {
+export type Hospital = {
   id: string;
   name: string;
   address: string;
@@ -14,7 +15,7 @@ export interface Hospital {
   hours: string;
   lat: number;
   lng: number;
-}
+};
 
 // Mock data with latitude and longitude
 const mockHospitals: Hospital[] = [

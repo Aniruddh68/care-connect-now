@@ -6,7 +6,7 @@ export interface Hospital {
   phone: string;
   latitude: number;
   longitude: number;
-  distance?: number;
+  distance?: string;
   specialties: string[];
   openingHours: string;
   imageUrl: string;
@@ -15,4 +15,5 @@ export interface Hospital {
   isOpen: boolean;
   emergencyServices: boolean;
   cardExpanded?: boolean;
+  availableDoctors?: number;
 }
