@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { LogIn } from 'lucide-react';
+import { LogIn, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
@@ -12,8 +11,8 @@ import {
   CardTitle 
 } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { useUser } from '@/context/UserContext';
 
 const UserLogin: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -21,6 +20,7 @@ const UserLogin: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { login } = useUser();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,11 +36,21 @@ const UserLogin: React.FC = () => {
 
     setIsLoading(true);
     try {
-      // Mock login - in a real app, you would implement actual authentication
-      // This is just a placeholder for demonstration
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Get users from localStorage
+      const users = JSON.parse(localStorage.getItem('careconnect_users') || '[]');
+      const user = users.find((u: any) => u.email === email);
       
-      if (email.includes('@') && password.length > 3) {
+      // For demo purposes, we'll just check if the user exists and accept any password
+      // In a real app, you would check the password hash
+      if (user) {
+        // Use the context login function instead of directly setting localStorage
+        login({
+          id: user.id,
+          fullName: user.fullName,
+          email: user.email,
+          loggedInAt: new Date().toISOString()
+        });
+        
         toast({
           title: "Success",
           description: "Login successful. Welcome back!",
@@ -49,19 +59,40 @@ const UserLogin: React.FC = () => {
       } else {
         toast({
           title: "Error",
-          description: "Invalid email or password.",
+          description: "Invalid email or password. If you're new, please create an account.",
           variant: "destructive"
         });
       }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleBackToOptions = () => {
+    navigate('/');
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-care-background p-4">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="space-y-1">
+      <Card className="w-full max-w-md shadow-lg relative">
+        <div className="absolute top-4 left-4">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={handleBackToOptions} 
+            className="hover:bg-gray-100"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+        </div>
+        <CardHeader className="space-y-1 pt-10">
           <div className="flex items-center justify-center mb-4">
             <img src="/logo.png" alt="Care Connect Logo" className="h-16 w-16" />
           </div>
@@ -128,7 +159,7 @@ const UserLogin: React.FC = () => {
             </Button>
             <div className="text-center text-sm">
               <span>Don't have an account? </span>
-              <a href="#" className="text-care-primary hover:underline">Sign up</a>
+              <Link to="/register" className="text-care-primary hover:underline">Sign up</Link>
               <span className="mx-2">•</span>
               <Link to="/" className="text-care-primary hover:underline">Back to options</Link>
             </div>

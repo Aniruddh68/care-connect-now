@@ -20,9 +20,11 @@ const LoginOptions = () => {
   };
 
   const handleUserLogin = () => {
-    // For now, we'll navigate to a placeholder page
-    // In a real app, this would go to the user login page
     navigate('/user-login');
+  };
+
+  const handleCreateAccount = () => {
+    navigate('/register');
   };
 
   return (
@@ -64,7 +66,12 @@ const LoginOptions = () => {
       <CardFooter className="flex flex-col space-y-2">
         <span className="text-sm text-center text-gray-500 w-full">
           New to Care Connect? 
-          <a href="#" className="text-care-primary ml-1 hover:underline">Create an account</a>
+          <button 
+            onClick={handleCreateAccount} 
+            className="text-care-primary ml-1 hover:underline"
+          >
+            Create an account
+          </button>
         </span>
       </CardFooter>
     </Card>

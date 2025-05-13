@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LocationProvider } from "./context/LocationContext";
 import { AdminProvider } from "./context/AdminContext";
+import { UserProvider } from "./context/UserContext";
 import Index from "./pages/Index";
 import FindDoctor from "./pages/FindDoctor";
 import BookAppointment from "./pages/BookAppointment";
@@ -21,6 +22,7 @@ import Payment from "./pages/Payment";
 import PaymentHistory from "./pages/PaymentHistory";
 import AdminLogin from "./pages/Admin/Login";
 import UserLogin from "./pages/Auth/UserLogin";
+import UserRegister from "./pages/Auth/UserRegister";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import AdminDoctors from "./pages/Admin/Doctors";
 import AdminSchedules from "./pages/Admin/Schedules";
@@ -34,36 +36,39 @@ const App = () => (
         <TooltipProvider>
           <LocationProvider>
             <AdminProvider>
-              <Toaster />
-              <Sonner />
-              <Routes>
-                {/* User Routes */}
-                <Route path="/" element={<Index />} />
-                <Route path="/find" element={<FindDoctor />} />
-                <Route path="/book/:doctorId" element={<BookAppointment />} />
-                <Route path="/appointments" element={<Appointments />} />
-                <Route path="/nearby" element={<Nearby />} />
-                <Route path="/emergency" element={<Emergency />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/settings/accounts" element={<Settings />} />
-                <Route path="/settings/profile" element={<ProfileSettings />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/payment" element={<Payment />} />
-                <Route path="/payment/history" element={<PaymentHistory />} />
-                
-                {/* Auth Routes */}
-                <Route path="/user-login" element={<UserLogin />} />
-                
-                {/* Admin Routes */}
-                <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                <Route path="/admin/doctors" element={<AdminDoctors />} />
-                <Route path="/admin/schedules" element={<AdminSchedules />} />
-                <Route path="/admin/settings" element={<AdminDashboard />} />
-                
-                {/* 404 */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <UserProvider>
+                <Toaster />
+                <Sonner />
+                <Routes>
+                  {/* User Routes */}
+                  <Route path="/" element={<Index />} />
+                  <Route path="/find" element={<FindDoctor />} />
+                  <Route path="/book/:doctorId" element={<BookAppointment />} />
+                  <Route path="/appointments" element={<Appointments />} />
+                  <Route path="/nearby" element={<Nearby />} />
+                  <Route path="/emergency" element={<Emergency />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/settings/accounts" element={<Settings />} />
+                  <Route path="/settings/profile" element={<ProfileSettings />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/payment" element={<Payment />} />
+                  <Route path="/payment/history" element={<PaymentHistory />} />
+                  
+                  {/* Auth Routes */}
+                  <Route path="/user-login" element={<UserLogin />} />
+                  <Route path="/register" element={<UserRegister />} />
+                  
+                  {/* Admin Routes */}
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route path="/admin/doctors" element={<AdminDoctors />} />
+                  <Route path="/admin/schedules" element={<AdminSchedules />} />
+                  <Route path="/admin/settings" element={<AdminDashboard />} />
+                  
+                  {/* 404 */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </UserProvider>
             </AdminProvider>
           </LocationProvider>
         </TooltipProvider>
