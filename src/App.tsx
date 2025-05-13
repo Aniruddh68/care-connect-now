@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -19,6 +20,7 @@ import ProfileSettings from "./pages/ProfileSettings";
 import Payment from "./pages/Payment";
 import PaymentHistory from "./pages/PaymentHistory";
 import AdminLogin from "./pages/Admin/Login";
+import UserLogin from "./pages/Auth/UserLogin";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import AdminDoctors from "./pages/Admin/Doctors";
 import AdminSchedules from "./pages/Admin/Schedules";
@@ -48,6 +50,9 @@ const App = () => (
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/payment" element={<Payment />} />
                 <Route path="/payment/history" element={<PaymentHistory />} />
+                
+                {/* Auth Routes */}
+                <Route path="/user-login" element={<UserLogin />} />
                 
                 {/* Admin Routes */}
                 <Route path="/admin/login" element={<AdminLogin />} />

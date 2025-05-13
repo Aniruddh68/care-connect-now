@@ -1,0 +1,142 @@
+
+import React, { useState } from 'react';
+import { LogIn } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardFooter, 
+  CardHeader, 
+  CardTitle 
+} from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
+const UserLogin: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !password) {
+      toast({
+        title: "Error",
+        description: "Please enter both email and password",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Mock login - in a real app, you would implement actual authentication
+      // This is just a placeholder for demonstration
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      if (email.includes('@') && password.length > 3) {
+        toast({
+          title: "Success",
+          description: "Login successful. Welcome back!",
+        });
+        navigate('/');
+      } else {
+        toast({
+          title: "Error",
+          description: "Invalid email or password.",
+          variant: "destructive"
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-care-background p-4">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="space-y-1">
+          <div className="flex items-center justify-center mb-4">
+            <img src="/logo.png" alt="Care Connect Logo" className="h-16 w-16" />
+          </div>
+          <CardTitle className="text-2xl text-center text-care-primary">Patient Login</CardTitle>
+          <CardDescription className="text-center">
+            Enter your credentials to access your health profile
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium" htmlFor="email">
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your.email@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <label className="text-sm font-medium" htmlFor="password">
+                  Password
+                </label>
+                <a href="#" className="text-xs text-care-primary hover:underline">
+                  Forgot password?
+                </a>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading}
+                required
+              />
+            </div>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-4">
+            <Button 
+              type="submit" 
+              className="w-full bg-care-primary hover:bg-sky-600"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <span className="flex items-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Signing in...
+                </span>
+              ) : (
+                <span className="flex items-center">
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Sign in
+                </span>
+              )}
+            </Button>
+            <div className="text-center text-sm">
+              <span>Don't have an account? </span>
+              <a href="#" className="text-care-primary hover:underline">Sign up</a>
+              <span className="mx-2">•</span>
+              <Link to="/" className="text-care-primary hover:underline">Back to options</Link>
+            </div>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
+  );
+};
+
+export default UserLogin;
