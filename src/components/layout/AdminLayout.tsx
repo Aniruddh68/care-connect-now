@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Users, Calendar, CheckSquare, AlertTriangle, Settings } from 'lucide-react';
