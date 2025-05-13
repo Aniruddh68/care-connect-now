@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { LogIn, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -55,7 +56,11 @@ const UserLogin: React.FC = () => {
           title: "Success",
           description: "Login successful. Welcome back!",
         });
-        navigate('/');
+        
+        // Ensure navigation happens after state updates
+        setTimeout(() => {
+          navigate('/');
+        }, 100);
       } else {
         toast({
           title: "Error",
