@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserRound, ShieldCheck } from 'lucide-react';
@@ -33,7 +32,7 @@ const LoginOptions = () => {
         <div className="flex items-center justify-center mb-4">
           <img src="/logo.png" alt="Care Connect Logo" className="h-16 w-16" />
         </div>
-        <CardTitle className="text-2xl text-center">Welcome to Care Connect</CardTitle>
+        <CardTitle className="text-2xl text-center text-care-primary">Welcome to Care Connect</CardTitle>
         <CardDescription className="text-center">
           Choose how you want to access the platform
         </CardDescription>

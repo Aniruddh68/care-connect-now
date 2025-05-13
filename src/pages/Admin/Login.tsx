@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { LogIn, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -51,6 +50,13 @@ const AdminLogin: React.FC = () => {
           variant: "destructive"
         });
       }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }

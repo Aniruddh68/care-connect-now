@@ -16,7 +16,6 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [admin, setAdmin] = useState<Admin | null>(null);
   const [systemStatus, setSystemStatus] = useState<SystemStatus>('online');
 
-  // Mock login function - would be replaced with actual API call
   const login = async (credentials: AdminLoginCredentials): Promise<boolean> => {
     try {
       // Simulate API call
