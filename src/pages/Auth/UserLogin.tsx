@@ -37,14 +37,35 @@ const UserLogin: React.FC = () => {
 
     setIsLoading(true);
     try {
-      // Get users from localStorage
+      // Check for dummy credentials first
+      if (email === 'aniruddhgupta148@gmail.com' && password === 'Aniruddh@12') {
+        // Log in with dummy user
+        login({
+          id: 'dummy-user-id',
+          fullName: 'Aniruddh Gupta',
+          email: 'aniruddhgupta148@gmail.com',
+          loggedInAt: new Date().toISOString()
+        });
+        
+        toast({
+          title: "Success",
+          description: "Login successful. Welcome back!",
+        });
+        
+        // Ensure navigation happens after state updates
+        setTimeout(() => {
+          navigate('/');
+        }, 100);
+        
+        setIsLoading(false);
+        return;
+      }
+      
+      // Regular login flow for registered users
       const users = JSON.parse(localStorage.getItem('careconnect_users') || '[]');
       const user = users.find((u: any) => u.email === email);
       
-      // For demo purposes, we'll just check if the user exists and accept any password
-      // In a real app, you would check the password hash
       if (user) {
-        // Use the context login function instead of directly setting localStorage
         login({
           id: user.id,
           fullName: user.fullName,
