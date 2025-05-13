@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { LogIn } from 'lucide-react';
+import { LogIn, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
@@ -55,10 +56,24 @@ const AdminLogin: React.FC = () => {
     }
   };
 
+  const handleBackToOptions = () => {
+    navigate('/');
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-care-background p-4">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="space-y-1">
+      <Card className="w-full max-w-md shadow-lg relative">
+        <div className="absolute top-4 left-4">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={handleBackToOptions} 
+            className="hover:bg-gray-100"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+        </div>
+        <CardHeader className="space-y-1 pt-10">
           <div className="flex items-center justify-center mb-4">
             <img src="/logo.png" alt="Care Connect Logo" className="h-16 w-16" />
           </div>
