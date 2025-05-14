@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Search, Plus } from 'lucide-react';
@@ -10,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import DoctorTable from '@/components/admin/DoctorTable';
 import AddDoctorForm from '@/components/admin/AddDoctorForm';
 import { Doctor } from '@/types/doctor';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const AdminDoctors: React.FC = () => {
   const location = useLocation();
@@ -17,6 +19,7 @@ const AdminDoctors: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddDoctorOpen, setIsAddDoctorOpen] = useState(false);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const activeDoctors = doctors.filter(doc => doc.status === 'active');
   const inactiveDoctors = doctors.filter(doc => doc.status === 'inactive');
@@ -62,8 +65,8 @@ const AdminDoctors: React.FC = () => {
 
   return (
     <AdminLayout title="Doctor Management" currentPath={location.pathname}>
-      <div className="flex justify-between items-center mb-6">
-        <div className="relative flex items-center w-72">
+      <div className={`flex ${isMobile ? 'flex-col' : 'justify-between'} items-center mb-6 gap-4`}>
+        <div className={`relative flex items-center ${isMobile ? 'w-full' : 'w-72'}`}>
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
           <Input
             type="search"
@@ -73,19 +76,19 @@ const AdminDoctors: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Button onClick={() => setIsAddDoctorOpen(true)}>
+        <Button onClick={() => setIsAddDoctorOpen(true)} className={isMobile ? 'w-full' : 'w-auto'}>
           <Plus className="h-4 w-4 mr-2" />
           Add New Doctor
         </Button>
       </div>
 
       <Tabs defaultValue="active" className="w-full">
-        <TabsList>
-          <TabsTrigger value="active">
-            Active Doctors ({filteredActiveDoctors.length})
+        <TabsList className={isMobile ? 'w-full grid grid-cols-2' : ''}>
+          <TabsTrigger value="active" className={isMobile ? 'flex-1' : ''}>
+            Active ({filteredActiveDoctors.length})
           </TabsTrigger>
-          <TabsTrigger value="inactive">
-            Inactive Doctors ({filteredInactiveDoctors.length})
+          <TabsTrigger value="inactive" className={isMobile ? 'flex-1' : ''}>
+            Inactive ({filteredInactiveDoctors.length})
           </TabsTrigger>
         </TabsList>
         <TabsContent value="active" className="mt-6">

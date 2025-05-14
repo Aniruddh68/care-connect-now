@@ -5,10 +5,12 @@ import { useAdminDoctors } from '@/hooks/use-admin-doctors';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { UserPlus, UserMinus, Calendar, List } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const AdminDashboard: React.FC = () => {
   const { doctors, appointments } = useAdminDoctors();
   const location = useLocation();
+  const isMobile = useIsMobile();
   
   const activeDoctors = doctors.filter(doctor => doctor.status === 'active').length;
   const inactiveDoctors = doctors.filter(doctor => doctor.status === 'inactive').length;
@@ -20,7 +22,7 @@ const AdminDashboard: React.FC = () => {
   return (
     <AdminLayout title="Dashboard" currentPath={location.pathname}>
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className={`grid grid-cols-1 ${isMobile ? 'grid-cols-1 gap-4' : 'md:grid-cols-2 lg:grid-cols-4 gap-6'} mb-8`}>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Active Doctors</CardTitle>
@@ -76,55 +78,93 @@ const AdminDashboard: React.FC = () => {
 
       {/* Recent Activity */}
       <h2 className="text-xl font-bold mb-4">Recent Appointments</h2>
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Patient
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Doctor
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date & Time
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {appointments.slice(0, 5).map(appointment => {
-              const doctor = doctors.find(d => d.id === appointment.doctorId);
-              return (
-                <tr key={appointment.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{appointment.patientName}</div>
-                    <div className="text-sm text-gray-500">ID: {appointment.patientId}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{doctor?.name}</div>
-                    <div className="text-sm text-gray-500">{doctor?.specialty}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{new Date(appointment.date).toLocaleDateString()}</div>
-                    <div className="text-sm text-gray-500">{appointment.startTime} - {appointment.endTime}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                      ${appointment.status === 'scheduled' ? 'bg-yellow-100 text-yellow-800' : 
-                        appointment.status === 'completed' ? 'bg-green-100 text-green-800' : 
-                        'bg-red-100 text-red-800'}`}>
-                      {appointment.status}
-                    </span>
-                  </td>
+      {isMobile ? (
+        <div className="space-y-4">
+          {appointments.slice(0, 5).map(appointment => {
+            const doctor = doctors.find(d => d.id === appointment.doctorId);
+            return (
+              <Card key={appointment.id} className="p-4">
+                <div className="flex justify-between mb-2">
+                  <div>
+                    <h3 className="font-medium">{appointment.patientName}</h3>
+                    <p className="text-sm text-gray-500">ID: {appointment.patientId}</p>
+                  </div>
+                  <span className={`px-2 h-fit inline-flex text-xs leading-5 font-semibold rounded-full 
+                    ${appointment.status === 'scheduled' ? 'bg-yellow-100 text-yellow-800' : 
+                      appointment.status === 'completed' ? 'bg-green-100 text-green-800' : 
+                      'bg-red-100 text-red-800'}`}>
+                    {appointment.status}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <p className="text-gray-500">Doctor</p>
+                    <p>{doctor?.name}</p>
+                    <p className="text-xs text-gray-500">{doctor?.specialty}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Date & Time</p>
+                    <p>{new Date(appointment.date).toLocaleDateString()}</p>
+                    <p className="text-xs text-gray-500">{appointment.startTime} - {appointment.endTime}</p>
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Patient
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Doctor
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date & Time
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {appointments.slice(0, 5).map(appointment => {
+                  const doctor = doctors.find(d => d.id === appointment.doctorId);
+                  return (
+                    <tr key={appointment.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{appointment.patientName}</div>
+                        <div className="text-sm text-gray-500">ID: {appointment.patientId}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{doctor?.name}</div>
+                        <div className="text-sm text-gray-500">{doctor?.specialty}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{new Date(appointment.date).toLocaleDateString()}</div>
+                        <div className="text-sm text-gray-500">{appointment.startTime} - {appointment.endTime}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                          ${appointment.status === 'scheduled' ? 'bg-yellow-100 text-yellow-800' : 
+                            appointment.status === 'completed' ? 'bg-green-100 text-green-800' : 
+                            'bg-red-100 text-red-800'}`}>
+                          {appointment.status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </AdminLayout>
   );
 };
