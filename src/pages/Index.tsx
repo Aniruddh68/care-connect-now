@@ -4,16 +4,20 @@ import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import LoginOptions from '@/components/auth/LoginOptions';
 import { useUser } from '@/context/UserContext';
+import { useAdmin } from '@/context/AdminContext';
 
 const HomePage: React.FC = () => {
-  const { isAuthenticated } = useUser();
+  const { isAuthenticated: isUserAuthenticated } = useUser();
+  const { isAuthenticated: isAdminAuthenticated } = useAdmin();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isUserAuthenticated) {
       navigate('/patient/home');
+    } else if (isAdminAuthenticated) {
+      navigate('/admin/dashboard');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isUserAuthenticated, isAdminAuthenticated, navigate]);
 
   return (
     <MainLayout hideNav={true}>
