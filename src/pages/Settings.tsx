@@ -1,18 +1,25 @@
+
 import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { User, Bell, Lock, HelpCircle, LogOut, Users } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import MultipleAccounts from '@/components/settings/MultipleAccounts';
+import { useUser } from '@/context/UserContext';
 
 const SettingsPage: React.FC = () => {
   const { toast } = useToast();
+  const { logout } = useUser();
+  const navigate = useNavigate();
   
   const handleLogout = () => {
+    logout();
     toast({
       title: "Logged out",
       description: "You have been successfully logged out.",
     });
+    // Redirect to the login page after logout
+    navigate('/');
   };
   
   const settingsItems = [
