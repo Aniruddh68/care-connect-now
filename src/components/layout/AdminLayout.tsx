@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Users, Calendar, CheckSquare, AlertTriangle, Settings, Menu } from 'lucide-react';
@@ -6,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useAdmin } from '@/context/AdminContext';
 import { Separator } from '@/components/ui/separator';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -117,6 +116,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, currentPath 
             </div>
           </div>
           <SheetContent side="left" className="p-0 w-64 bg-care-dark text-white">
+            <SheetHeader>
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+            </SheetHeader>
             <NavContent />
           </SheetContent>
         </Sheet>
