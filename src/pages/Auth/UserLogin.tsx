@@ -54,7 +54,7 @@ const UserLogin: React.FC = () => {
         
         // Ensure navigation happens after state updates
         setTimeout(() => {
-          navigate('/');
+          navigate('/patient/home');
         }, 100);
         
         setIsLoading(false);
@@ -80,7 +80,7 @@ const UserLogin: React.FC = () => {
         
         // Ensure navigation happens after state updates
         setTimeout(() => {
-          navigate('/');
+          navigate('/patient/home');
         }, 100);
       } else {
         toast({

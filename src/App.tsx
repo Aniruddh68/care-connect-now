@@ -26,6 +26,7 @@ import UserRegister from "./pages/Auth/UserRegister";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import AdminDoctors from "./pages/Admin/Doctors";
 import AdminSchedules from "./pages/Admin/Schedules";
+import PatientHomePage from "./pages/Patient/HomePage";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ const App = () => (
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/payment" element={<Payment />} />
                   <Route path="/payment/history" element={<PaymentHistory />} />
+                  <Route path="/patient/home" element={<PatientHomePage />} />
                   
                   {/* Auth Routes */}
                   <Route path="/user-login" element={<UserLogin />} />
