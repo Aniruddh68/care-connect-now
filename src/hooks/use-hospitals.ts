@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from '@/context/LocationContext';
@@ -32,18 +31,6 @@ const mockHospitals: Hospital[] = [
     lng: 77.457449
   },
   {
-    id: '1',
-    name: 'Bhopal Medical Center',
-    address: '123 M.P. Nagar, Bhopal',
-    distance: '1.2 miles',
-    availableDoctors: 5,
-    phone: '(0755) 123-4567',
-    open: true,
-    hours: 'Open 24 hours',
-    lat: 23.259933,
-    lng: 77.412613
-  },
-  {
     id: '10',
     name: 'Bhopal Care Hospital',
     address: 'MP Nagar Zone II, Bhopal',
@@ -52,20 +39,8 @@ const mockHospitals: Hospital[] = [
     phone: '(0755) 444-5566',
     open: true,
     hours: '9:00 AM - 9:00 PM',
-    lat: 23.1998,
-    lng: 77.4416
-  },
-  {
-    id: '4',
-    name: 'Bhopal Children\'s Hospital',
-    address: '234 TT Nagar, Bhopal',
-    distance: '2.4 miles',
-    availableDoctors: 4,
-    phone: '(0755) 234-5678',
-    open: true,
-    hours: 'Open 24 hours',
-    lat: 23.302444,
-    lng: 77.398321
+    lat: 23.202633,
+    lng: 77.437676
   },
   {
     id: '13',
@@ -76,8 +51,8 @@ const mockHospitals: Hospital[] = [
     phone: '(0755) 111-2233',
     open: true,
     hours: '8:00 AM - 8:00 PM',
-    lat: 23.2166,
-    lng: 77.4385
+    lat: 23.2177,
+    lng: 77.4392
   },
   {
     id: '6',
