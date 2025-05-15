@@ -8,11 +8,14 @@ import { Input } from '@/components/ui/input';
 import { WalletIcon, QrCodeIcon, CreditCard, Wallet, WalletCards } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { QRCodeSVG } from 'qrcode.react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 const Payment = () => {
   const { toast } = useToast();
   const [amount, setAmount] = useState('');
   const [paymentMode, setPaymentMode] = useState<'upi' | 'qr'>('upi');
+  const [upiApp, setUpiApp] = useState<'phonepe' | 'googlepay' | 'amazonpay' | 'custom'>('custom');
   const upiId = 'aniruddhgupta148@ybl';
   const [customUpiId, setCustomUpiId] = useState('');
   const [showNotification, setShowNotification] = useState(false);
@@ -27,11 +30,32 @@ const Payment = () => {
       return;
     }
     
+    // Get the UPI ID to use
+    let recipientUpi = '';
+    let recipientName = '';
+    
+    if (upiApp === 'custom' && customUpiId) {
+      recipientUpi = customUpiId;
+      recipientName = 'Custom Recipient';
+    } else if (upiApp === 'phonepe') {
+      recipientUpi = upiId;
+      recipientName = 'PhonePe';
+    } else if (upiApp === 'googlepay') {
+      recipientUpi = upiId;
+      recipientName = 'Google Pay';
+    } else if (upiApp === 'amazonpay') {
+      recipientUpi = upiId;
+      recipientName = 'Amazon Pay';
+    } else {
+      recipientUpi = upiId;
+      recipientName = 'Care Connect Bhopal';
+    }
+    
     // Simulate UPI payment notification
-    if (paymentMode === 'upi' && customUpiId) {
+    if (paymentMode === 'upi') {
       toast({
         title: "UPI Payment Notification",
-        description: `A payment request of ₹${amount} has been sent to ${customUpiId}`,
+        description: `A payment request of ₹${amount} has been sent via ${recipientName}`,
         variant: "default"
       });
 
@@ -39,15 +63,15 @@ const Payment = () => {
       setTimeout(() => {
         toast({
           title: "Payment Successful!",
-          description: `Payment of ₹${amount} to ${customUpiId} completed successfully.`,
+          description: `Payment of ₹${amount} to ${recipientName} completed successfully.`,
           variant: "default"
         });
         
         // Store payment in local storage for history
-        savePaymentToHistory(customUpiId);
+        savePaymentToHistory(recipientName);
       }, 2000);
     } else {
-      // Original code for default UPI
+      // Original code for QR
       toast({
         title: "Payment Initiated",
         description: `Payment of ₹${amount} initiated via ${paymentMode === 'upi' ? 'UPI' : 'QR Code'}.`,
@@ -139,21 +163,72 @@ const Payment = () => {
                   </div>
                   
                   {paymentMode === 'upi' && (
-                    <div>
-                      <label htmlFor="upiId" className="block text-sm font-medium mb-1">
-                        Custom UPI ID (Optional)
-                      </label>
-                      <Input
-                        id="upiId"
-                        type="text"
-                        value={customUpiId}
-                        onChange={(e) => setCustomUpiId(e.target.value)}
-                        className="w-full"
-                        placeholder="Enter recipient's UPI ID"
-                      />
-                      <p className="text-xs text-gray-500 mt-1">
-                        Leave empty to use our default UPI ID
-                      </p>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-sm font-medium mb-3">Select UPI App</p>
+                        <RadioGroup 
+                          value={upiApp}
+                          onValueChange={(value) => setUpiApp(value as 'phonepe' | 'googlepay' | 'amazonpay' | 'custom')}
+                          className="grid grid-cols-2 gap-4"
+                        >
+                          <div className="flex items-center space-x-2 border rounded-lg p-3">
+                            <RadioGroupItem value="phonepe" id="phonepe" />
+                            <Label htmlFor="phonepe" className="flex items-center gap-2">
+                              <img 
+                                src="https://www.logo.wine/a/logo/PhonePe/PhonePe-Logo.wine.svg" 
+                                alt="PhonePe" 
+                                className="h-6 w-6" 
+                              />
+                              PhonePe
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2 border rounded-lg p-3">
+                            <RadioGroupItem value="googlepay" id="googlepay" />
+                            <Label htmlFor="googlepay" className="flex items-center gap-2">
+                              <img 
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Pay_Logo_%282020%29.svg/1024px-Google_Pay_Logo_%282020%29.svg.png" 
+                                alt="Google Pay" 
+                                className="h-6 w-6" 
+                              />
+                              Google Pay
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2 border rounded-lg p-3">
+                            <RadioGroupItem value="amazonpay" id="amazonpay" />
+                            <Label htmlFor="amazonpay" className="flex items-center gap-2">
+                              <img 
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Amazon_Pay_logo.svg/1200px-Amazon_Pay_logo.svg.png" 
+                                alt="Amazon Pay" 
+                                className="h-6 w-6" 
+                              />
+                              Amazon Pay
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2 border rounded-lg p-3">
+                            <RadioGroupItem value="custom" id="custom" />
+                            <Label htmlFor="custom" className="flex items-center gap-2">
+                              <WalletCards className="h-6 w-6" />
+                              Custom
+                            </Label>
+                          </div>
+                        </RadioGroup>
+                      </div>
+
+                      {upiApp === 'custom' && (
+                        <div>
+                          <label htmlFor="upiId" className="block text-sm font-medium mb-1">
+                            Custom UPI ID
+                          </label>
+                          <Input
+                            id="upiId"
+                            type="text"
+                            value={customUpiId}
+                            onChange={(e) => setCustomUpiId(e.target.value)}
+                            className="w-full"
+                            placeholder="Enter recipient's UPI ID"
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -178,9 +253,11 @@ const Payment = () => {
                 {paymentMode === 'upi' ? (
                   <div className="text-center">
                     <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                      <p className="font-medium text-care-dark break-all">{customUpiId || upiId}</p>
+                      <p className="font-medium text-care-dark break-all">
+                        {upiApp === 'custom' && customUpiId ? customUpiId : upiId}
+                      </p>
                     </div>
-                    <p className="text-sm text-gray-500">Enter this UPI ID in your payment app</p>
+                    <p className="text-sm text-gray-500">Use this UPI ID in your payment app</p>
                   </div>
                 ) : (
                   <div className="text-center">

@@ -1,13 +1,15 @@
+
 import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { CalendarIcon, MapPinIcon, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { format } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAppointmentStore, Appointment } from '@/services/appointmentService';
 
 const AppointmentsPage: React.FC = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<'upcoming' | 'past'>('upcoming');
   
   // Get appointments from our service
@@ -27,6 +29,15 @@ const AppointmentsPage: React.FC = () => {
     toast({
       title: "Appointment Cancelled",
       description: "Your appointment has been cancelled successfully.",
+      variant: "default"
+    });
+  };
+
+  const handleBookFollowUp = (doctorId: string) => {
+    navigate(`/book/${doctorId}`);
+    toast({
+      title: "Booking Follow-up",
+      description: "You can now schedule a follow-up appointment.",
       variant: "default"
     });
   };
@@ -160,7 +171,10 @@ const AppointmentsPage: React.FC = () => {
                     </div>
                     
                     {appointment.status === 'completed' && (
-                      <button className="w-full primary-button py-2">
+                      <button 
+                        className="w-full primary-button py-2"
+                        onClick={() => handleBookFollowUp("1")} // Using a default doctor ID
+                      >
                         Book Follow-up
                       </button>
                     )}

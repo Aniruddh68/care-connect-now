@@ -29,17 +29,17 @@ const MultipleAccounts: React.FC = () => {
   const [accounts, setAccounts] = useState<Account[]>([
     {
       id: '1',
-      name: 'John Doe',
-      email: 'johndoe@example.com',
-      initials: 'JD',
+      name: 'Aniruddh Gupta',
+      email: 'aniruddhgupta148@gmail.com',
+      initials: 'AG',
       avatar: 'https://randomuser.me/api/portraits/men/42.jpg',
       isActive: true,
     },
     {
       id: '2',
-      name: 'Jane Smith',
-      email: 'janesmith@example.com',
-      initials: 'JS',
+      name: 'Kushbu Jain',
+      email: 'Kushbu@careconnect.com',
+      initials: 'KJ',
       avatar: 'https://randomuser.me/api/portraits/women/24.jpg',
       isActive: false,
     }
