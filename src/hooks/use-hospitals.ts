@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from '@/context/LocationContext';
@@ -111,8 +112,8 @@ const mockHospitals: Hospital[] = [
     phone: '(0755) 345-6789',
     open: true,
     hours: 'Open 24 hours',
-    lat: 23.2870,
-    lng: 77.4120
+    lat: 23.311579,
+    lng: 77.365512
   },
   {
     id: '15',
