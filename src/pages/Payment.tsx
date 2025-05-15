@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
@@ -11,11 +10,14 @@ import { QRCodeSVG } from 'qrcode.react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 
+type PaymentMode = 'upi' | 'qr';
+type UpiApp = 'phonepe' | 'googlepay' | 'amazonpay' | 'custom';
+
 const Payment = () => {
   const { toast } = useToast();
   const [amount, setAmount] = useState('');
-  const [paymentMode, setPaymentMode] = useState<'upi' | 'qr'>('upi');
-  const [upiApp, setUpiApp] = useState<'phonepe' | 'googlepay' | 'amazonpay' | 'custom'>('custom');
+  const [paymentMode, setPaymentMode] = useState<PaymentMode>('upi');
+  const [upiApp, setUpiApp] = useState<UpiApp>('custom');
   const upiId = 'aniruddhgupta148@ybl';
   const [customUpiId, setCustomUpiId] = useState('');
   const [showNotification, setShowNotification] = useState(false);
@@ -168,7 +170,7 @@ const Payment = () => {
                         <p className="text-sm font-medium mb-3">Select UPI App</p>
                         <RadioGroup 
                           value={upiApp}
-                          onValueChange={(value) => setUpiApp(value as 'phonepe' | 'googlepay' | 'amazonpay' | 'custom')}
+                          onValueChange={(value) => setUpiApp(value as UpiApp)}
                           className="grid grid-cols-2 gap-4"
                         >
                           <div className="flex items-center space-x-2 border rounded-lg p-3">
