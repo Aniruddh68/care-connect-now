@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet';
 import L from 'leaflet';
@@ -36,8 +37,8 @@ const HospitalMap: React.FC<HospitalMapProps> = ({ userLocation, hospitals }) =>
   const { toast } = useToast();
   const mapRef = useRef<L.Map>(null);
 
-  // Default center (Bhopal)
-  const defaultCenter: [number, number] = [23.2599, 77.4126];
+  // Default center (Bhopal - updated to more central location)
+  const defaultCenter: [number, number] = [23.2599, 77.4126]; // Bhopal Medical Center as default center
   const center = userLocation 
     ? [userLocation.latitude, userLocation.longitude] as [number, number]
     : defaultCenter;
@@ -46,7 +47,7 @@ const HospitalMap: React.FC<HospitalMapProps> = ({ userLocation, hospitals }) =>
     <div className="w-full h-full rounded-xl overflow-hidden">
       <MapContainer
         center={center}
-        zoom={13}
+        zoom={12}
         style={{ width: '100%', height: '100%' }}
         ref={mapRef}
       >
