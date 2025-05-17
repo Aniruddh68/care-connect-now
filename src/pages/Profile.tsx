@@ -1,4 +1,3 @@
-
 import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -8,10 +7,12 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Edit2, Save } from 'lucide-react';
+import { useUser } from '@/context/UserContext';
 
 const Profile = () => {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = React.useState(false);
+  const { user } = useUser();
   
   const handleSave = () => {
     setIsEditing(false);
@@ -21,6 +22,10 @@ const Profile = () => {
     });
   };
   
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('');
+  };
+
   return (
     <MainLayout title="My Profile">
       <div className="max-w-lg mx-auto px-4 pb-20 pt-4">
@@ -30,11 +35,11 @@ const Profile = () => {
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="flex items-center space-x-4">
               <Avatar className="h-16 w-16 border-2 border-care-primary">
-                <AvatarImage src="https://randomuser.me/api/portraits/men/42.jpg" alt="Profile" />
-                <AvatarFallback className="text-lg">JD</AvatarFallback>
+                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user?.fullName}`} alt={user?.fullName} />
+                <AvatarFallback>{user?.fullName ? getInitials(user.fullName) : 'U'}</AvatarFallback>
               </Avatar>
               <div>
-                <h2 className="text-xl font-bold">John Doe</h2>
+                <h2 className="text-xl font-bold">{user?.fullName}</h2>
                 <p className="text-care-muted text-sm">Patient ID: BPL20245678</p>
               </div>
             </div>
@@ -54,7 +59,7 @@ const Profile = () => {
                   <Input 
                     id="email" 
                     type="email" 
-                    value="johndoe@example.com" 
+                    value={user?.email} 
                     readOnly={!isEditing}
                     className={!isEditing ? "bg-gray-50" : ""}
                   />

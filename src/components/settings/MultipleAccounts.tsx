@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { PlusCircle, Trash2, Check } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -14,43 +13,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-
-type Account = {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  initials: string;
-  isActive: boolean;
-};
+import { useUser } from '@/context/UserContext';
 
 const MultipleAccounts: React.FC = () => {
   const { toast } = useToast();
-  const [accounts, setAccounts] = useState<Account[]>([
-    {
-      id: '1',
-      name: 'Aniruddh Gupta',
-      email: 'aniruddhgupta148@gmail.com',
-      initials: 'AG',
-      avatar: 'https://randomuser.me/api/portraits/men/42.jpg',
-      isActive: true,
-    },
-    {
-      id: '2',
-      name: 'Kushbu Jain',
-      email: 'Kushbu@careconnect.com',
-      initials: 'KJ',
-      avatar: 'https://randomuser.me/api/portraits/women/24.jpg',
-      isActive: false,
-    }
-  ]);
-  
+  const { accounts, switchAccount } = useUser();
   const [isAddAccountOpen, setIsAddAccountOpen] = useState(false);
   const [newAccount, setNewAccount] = useState({
     name: '',
     email: '',
   });
-  
+
   const handleAddAccount = () => {
     if (!newAccount.name || !newAccount.email) {
       toast({
@@ -60,22 +33,14 @@ const MultipleAccounts: React.FC = () => {
       });
       return;
     }
-    
+
     const nameInitials = newAccount.name
       .split(' ')
       .map(word => word[0])
       .join('')
       .toUpperCase();
-      
-    const newAccountData: Account = {
-      id: Date.now().toString(),
-      name: newAccount.name,
-      email: newAccount.email,
-      initials: nameInitials,
-      isActive: false,
-    };
-    
-    setAccounts([...accounts, newAccountData]);
+
+    // Add new account logic here using context
     setNewAccount({ name: '', email: '' });
     setIsAddAccountOpen(false);
     
@@ -84,49 +49,16 @@ const MultipleAccounts: React.FC = () => {
       description: `${newAccount.name}'s account has been added successfully.`,
     });
   };
-  
-  const handleRemoveAccount = (id: string) => {
-    if (accounts.length <= 1) {
-      toast({
-        title: "Cannot remove account",
-        description: "You must have at least one account.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    const accountToRemove = accounts.find(acc => acc.id === id);
-    
-    if (accountToRemove?.isActive) {
-      toast({
-        title: "Cannot remove active account",
-        description: "Please switch to another account before removing this one.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setAccounts(accounts.filter(account => account.id !== id));
-    toast({
-      title: "Account removed",
-      description: "The account has been removed successfully.",
-    });
-  };
-  
+
   const handleSwitchAccount = (id: string) => {
-    setAccounts(accounts.map(account => ({
-      ...account,
-      isActive: account.id === id
-    })));
-    
-    const newActiveAccount = accounts.find(acc => acc.id === id);
+    switchAccount(id);
     
     toast({
       title: "Account switched",
-      description: `Switched to ${newActiveAccount?.name}'s account.`,
+      description: "Successfully switched to the selected account.",
     });
   };
-  
+
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-3">
@@ -146,13 +78,13 @@ const MultipleAccounts: React.FC = () => {
           <React.Fragment key={account.id}>
             <div className="flex items-center p-4 hover:bg-gray-50">
               <Avatar className="h-10 w-10 mr-3 border border-gray-200">
-                <AvatarImage src={account.avatar} alt={account.name} />
-                <AvatarFallback>{account.initials}</AvatarFallback>
+                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${account.fullName}`} alt={account.fullName} />
+                <AvatarFallback>{account.fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
               </Avatar>
               
               <div className="flex-grow">
                 <div className="flex items-center">
-                  <h4 className="font-medium">{account.name}</h4>
+                  <h4 className="font-medium">{account.fullName}</h4>
                   {account.isActive && (
                     <span className="ml-2 px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded-full">
                       Active
@@ -171,17 +103,6 @@ const MultipleAccounts: React.FC = () => {
                     className="h-8 w-8 rounded-full"
                   >
                     <Check className="h-4 w-4 text-care-primary" />
-                  </Button>
-                )}
-                
-                {!account.isActive && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    onClick={() => handleRemoveAccount(account.id)}
-                    className="h-8 w-8 rounded-full"
-                  >
-                    <Trash2 className="h-4 w-4 text-red-500" />
                   </Button>
                 )}
               </div>
