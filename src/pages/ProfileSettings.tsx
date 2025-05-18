@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import MainLayout from "@/components/layout/MainLayout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -16,6 +15,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
+import { useUser } from "@/context/UserContext";
 
 interface ProfileFormValues {
   email: string;
@@ -27,10 +27,10 @@ interface ProfileFormValues {
 const ProfileSettings = () => {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  const { user } = useUser();
   
-  // Default values for the form
   const defaultValues: ProfileFormValues = {
-    email: "johndoe@example.com",
+    email: user?.email || "",
     phone: "+91 98765 43210",
     address: "123 Main St, Bhopal, Madhya Pradesh",
     dob: "1990-01-15"
@@ -49,7 +49,6 @@ const ProfileSettings = () => {
     });
   };
   
-  // Toggle edit mode and reset form when cancelling
   const toggleEditMode = () => {
     if (isEditing) {
       form.reset(defaultValues);
@@ -65,11 +64,11 @@ const ProfileSettings = () => {
           <CardHeader className="flex flex-col sm:flex-row items-center sm:items-start sm:justify-between gap-4">
             <div className="flex items-center gap-4">
               <Avatar className="h-20 w-20 border-2 border-care-primary">
-                <AvatarImage src="https://randomuser.me/api/portraits/men/42.jpg" alt="Profile" />
-                <AvatarFallback className="text-lg">JD</AvatarFallback>
+                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user?.fullName}`} alt={user?.fullName} />
+                <AvatarFallback>{user?.fullName ? user.fullName.split(' ').map(n => n[0]).join('') : 'AG'}</AvatarFallback>
               </Avatar>
               <div>
-                <h2 className="text-xl font-bold break-all">John Doe</h2>
+                <h2 className="text-xl font-bold break-all">{user?.fullName}</h2>
                 <p className="text-care-muted text-xs sm:text-sm">Patient ID: BPL20245678</p>
               </div>
             </div>

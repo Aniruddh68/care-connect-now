@@ -1,7 +1,6 @@
-
 import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
-import { User, Bell, Lock, HelpCircle, LogOut, Users } from 'lucide-react';
+import { User, Bell, Lock, HelpCircle, LogOut, Users, Shield, Key } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import MultipleAccounts from '@/components/settings/MultipleAccounts';
@@ -9,7 +8,7 @@ import { useUser } from '@/context/UserContext';
 
 const SettingsPage: React.FC = () => {
   const { toast } = useToast();
-  const { logout } = useUser();
+  const { logout, user } = useUser();
   const navigate = useNavigate();
   
   const handleLogout = () => {
@@ -18,7 +17,6 @@ const SettingsPage: React.FC = () => {
       title: "Logged out",
       description: "You have been successfully logged out.",
     });
-    // Redirect to the login page after logout
     navigate('/');
   };
   
@@ -39,7 +37,19 @@ const SettingsPage: React.FC = () => {
       icon: Lock,
       label: 'Privacy & Security',
       description: 'Manage your account security',
-      path: '/settings/privacy'
+      path: '/settings/privacy',
+      subItems: [
+        {
+          icon: Shield,
+          label: 'Two-Factor Authentication',
+          description: 'Add an extra layer of security'
+        },
+        {
+          icon: Key,
+          label: 'Change Password',
+          description: 'Update your login credentials'
+        }
+      ]
     },
     {
       icon: HelpCircle,
@@ -54,16 +64,15 @@ const SettingsPage: React.FC = () => {
       <div className="max-w-lg mx-auto px-4 pb-20 pt-4">
         <div className="mb-6 bg-white rounded-xl shadow p-4 flex items-center">
           <div className="bg-care-primary h-16 w-16 rounded-full flex items-center justify-center text-white text-xl font-bold mr-4">
-            JD
+            {user?.fullName?.split(' ').map(n => n[0]).join('')}
           </div>
           <div>
-            <h2 className="font-bold text-lg">John Doe</h2>
-            <p className="text-care-muted">johndoe@example.com</p>
-            <p className="text-sm text-care-muted">+1 (555) 123-4567</p>
+            <h2 className="font-bold text-lg">{user?.fullName}</h2>
+            <p className="text-care-muted">{user?.email}</p>
+            <p className="text-sm text-care-muted">+91 98765 43210</p>
           </div>
         </div>
         
-        {/* Multiple Accounts Section */}
         <MultipleAccounts />
         
         <div className="mb-6">
@@ -87,6 +96,19 @@ const SettingsPage: React.FC = () => {
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="chevron-right"><path d="m9 18 6-6-6-6"/></svg>
                   </div>
                 </Link>
+                {item.subItems && (
+                  <div className="pl-16 pr-4 pb-4 -mt-2">
+                    {item.subItems.map((subItem, subIndex) => (
+                      <div key={subItem.label} className="flex items-center p-2 rounded hover:bg-gray-50">
+                        <subItem.icon className="h-4 w-4 text-care-muted mr-2" />
+                        <div>
+                          <h5 className="text-sm font-medium">{subItem.label}</h5>
+                          <p className="text-xs text-care-muted">{subItem.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 {index < settingsItems.length - 1 && (
                   <div className="border-b border-gray-100"></div>
                 )}
