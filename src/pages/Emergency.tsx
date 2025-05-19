@@ -97,13 +97,13 @@ const EmergencyPage: React.FC = () => {
           <p className="text-red-700 mb-4">
             If this is a life-threatening emergency in Bhopal, please call emergency services immediately.
           </p>
-          <button 
-            onClick={handleCallEmergency}
-            className="w-full py-3 bg-red-600 text-white font-bold rounded-lg flex items-center justify-center"
-          >
-            <Phone className="mr-2 h-5 w-5" />
-            Call Emergency Services (108)
-          </button>
+         <a
+            href="tel:108"
+              className="w-full py-3 bg-red-600 text-white font-bold rounded-lg flex items-center justify-center"
+>
+              <Phone className="mr-2 h-5 w-5" />
+                   Call Emergency Services (108)
+              </a>
         </div>
         
         <h2 className="text-xl font-bold text-care-dark mb-4">Nearest Emergency Care in Bhopal</h2>
