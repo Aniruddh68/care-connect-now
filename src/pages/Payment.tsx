@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
@@ -73,10 +74,10 @@ const Payment = () => {
         savePaymentToHistory(recipientName);
       }, 2000);
     } else {
-      // Original code for QR
+      // QR code payment
       toast({
         title: "Payment Initiated",
-        description: `Payment of ₹${amount} initiated via ${paymentMode === 'upi' ? 'UPI' : 'QR Code'}.`,
+        description: `Payment of ₹${amount} initiated via QR Code.`,
         variant: "default"
       });
       
