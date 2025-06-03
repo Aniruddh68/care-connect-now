@@ -1,13 +1,12 @@
-
 import { useState } from 'react';
 import { Doctor, DoctorSchedule, TimeSlot, Appointment } from '@/types/doctor';
 import { useAdmin } from '@/context/AdminContext';
 
-// Sample data for doctors
+// Sample data for doctors with updated names
 const initialDoctors: Doctor[] = [
   {
     id: 'd1',
-    name: 'Dr. Rajesh Kumar',
+    name: 'Dr. Rajesh Sharma',
     specialty: 'Cardiologist',
     imageUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
     hospital: 'Care Connect Hospital',
@@ -15,7 +14,7 @@ const initialDoctors: Doctor[] = [
     availableToday: true,
     rating: 4.8,
     status: 'active',
-    email: 'rajesh.kumar@careconnect.com',
+    email: 'rajesh.sharma@careconnect.com',
     phone: '+91 98765 43210',
     bio: 'Experienced cardiologist with over 10 years of practice.'
   },
@@ -36,7 +35,7 @@ const initialDoctors: Doctor[] = [
   },
   {
     id: 'd3',
-    name: 'Dr. Amit Patel',
+    name: 'Dr. Anil Kumar',
     specialty: 'Orthopedic',
     imageUrl: 'https://randomuser.me/api/portraits/men/45.jpg',
     hospital: 'Health First Hospital',
@@ -44,9 +43,38 @@ const initialDoctors: Doctor[] = [
     availableToday: true,
     rating: 4.9,
     status: 'inactive',
-    email: 'amit.patel@careconnect.com',
+    email: 'anil.kumar@careconnect.com',
     phone: '+91 76543 21098',
     bio: 'Specialized in joint replacements and sports injuries.'
+  },
+  {
+    id: 'd4',
+    name: 'Dr. Neha Verma',
+    specialty: 'Pediatrician',
+    imageUrl: 'https://randomuser.me/api/portraits/women/33.jpg',
+    hospital: 'Children Medical Center',
+    distance: '2.1 km',
+    availableToday: true,
+    rating: 4.7,
+    status: 'active',
+    email: 'neha.verma@careconnect.com',
+    phone: '+91 98765 43211',
+    bio: 'Specialized in child healthcare and development.'
+  },
+  {
+    id: 'd5',
+    name: 'Dr. Suresh Reddy',
+    specialty: 'Neurologist',
+    imageUrl: 'https://randomuser.me/api/portraits/men/55.jpg',
+    hospital: 'Neuro Care Hospital',
+    distance: '4.2 km',
+    availableToday: false,
+    nextAvailable: 'Tomorrow',
+    rating: 4.8,
+    status: 'active',
+    email: 'suresh.reddy@careconnect.com',
+    phone: '+91 98765 43212',
+    bio: 'Expert in neurological disorders and brain surgery.'
   }
 ];
 

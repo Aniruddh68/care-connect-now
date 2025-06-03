@@ -5,13 +5,13 @@ import MainLayout from '@/components/layout/MainLayout';
 import { MapPinIcon, Clock, Phone, Stethoscope, Heart, Ambulance } from 'lucide-react';
 import DoctorCard, { Doctor } from '@/components/common/DoctorCard';
 
-// Mock data
+// Mock data with updated doctor names
 const mockEmergencyDoctors: Doctor[] = [
   {
     id: '1',
-    name: 'Dr. Sarah Johnson',
+    name: 'Dr. Rajesh Sharma',
     specialty: 'Emergency Medicine',
-    imageUrl: 'https://randomuser.me/api/portraits/women/45.jpg',
+    imageUrl: 'https://randomuser.me/api/portraits/men/45.jpg',
     hospital: 'Bhopal Medical Center',
     distance: '1.2 miles',
     availableToday: true,
@@ -19,9 +19,9 @@ const mockEmergencyDoctors: Doctor[] = [
   },
   {
     id: '2',
-    name: 'Dr. Michael Chen',
+    name: 'Dr. Priya Singh',
     specialty: 'Emergency Medicine',
-    imageUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
+    imageUrl: 'https://randomuser.me/api/portraits/women/32.jpg',
     hospital: 'AIIMS Bhopal',
     distance: '0.8 miles',
     availableToday: true,
@@ -29,9 +29,9 @@ const mockEmergencyDoctors: Doctor[] = [
   },
   {
     id: '3',
-    name: 'Dr. Priya Sharma',
+    name: 'Dr. Anil Kumar',
     specialty: 'Trauma Surgery',
-    imageUrl: 'https://randomuser.me/api/portraits/women/33.jpg',
+    imageUrl: 'https://randomuser.me/api/portraits/men/33.jpg',
     hospital: 'Gandhi Medical College',
     distance: '1.5 miles',
     availableToday: true,
@@ -39,9 +39,9 @@ const mockEmergencyDoctors: Doctor[] = [
   },
   {
     id: '4',
-    name: 'Dr. Rajesh Kumar',
+    name: 'Dr. Neha Verma',
     specialty: 'Critical Care',
-    imageUrl: 'https://randomuser.me/api/portraits/men/44.jpg',
+    imageUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
     hospital: 'Hamidia Hospital',
     distance: '2.3 miles',
     availableToday: true,
@@ -49,9 +49,9 @@ const mockEmergencyDoctors: Doctor[] = [
   },
   {
     id: '5',
-    name: 'Dr. Aisha Patel',
+    name: 'Dr. Suresh Reddy',
     specialty: 'Pediatric Emergency',
-    imageUrl: 'https://randomuser.me/api/portraits/women/22.jpg',
+    imageUrl: 'https://randomuser.me/api/portraits/men/22.jpg',
     hospital: 'Bhopal Children\'s Hospital',
     distance: '1.7 miles',
     availableToday: false,
@@ -60,9 +60,9 @@ const mockEmergencyDoctors: Doctor[] = [
   },
   {
     id: '6',
-    name: 'Dr. Vikram Singh',
+    name: 'Dr. Pooja Mehta',
     specialty: 'Cardiology Emergency',
-    imageUrl: 'https://randomuser.me/api/portraits/men/55.jpg',
+    imageUrl: 'https://randomuser.me/api/portraits/women/55.jpg',
     hospital: 'Heart Care Bhopal',
     distance: '3.1 miles',
     availableToday: true,

@@ -46,35 +46,55 @@ const PatientHomePage: React.FC = () => {
     }
   ];
 
-  // Health tips collection
-  const healthTips = [
+  // Emergency tips collection
+  const emergencyTips = [
     {
-      title: "Stay Hydrated",
-      description: "Remember to drink at least 8 glasses of water daily for optimal health. Staying hydrated helps your body maintain energy levels and supports vital functions."
+      title: "Heart Attack Signs",
+      description: "Call 108 immediately if experiencing chest pain, shortness of breath, nausea, or pain radiating to arms. Time is critical in heart attack situations."
     },
     {
-      title: "Balanced Diet",
-      description: "Include fruits, vegetables, whole grains, lean proteins, and healthy fats in your meals. A balanced diet provides essential nutrients for overall wellbeing."
+      title: "Choking Emergency",
+      description: "Perform the Heimlich maneuver: stand behind the person, place hands above navel, and give quick upward thrusts. Call emergency services if unsuccessful."
     },
     {
-      title: "Regular Exercise",
-      description: "Aim for at least 30 minutes of moderate physical activity most days. Regular exercise strengthens your heart, improves mood, and helps maintain a healthy weight."
+      title: "Severe Bleeding",
+      description: "Apply direct pressure with clean cloth to the wound. Elevate the injured area above heart level if possible. Call 108 for severe bleeding."
     },
     {
-      title: "Quality Sleep",
-      description: "Prioritize 7-9 hours of quality sleep each night. Good sleep boosts immune function, enhances memory, and helps regulate metabolism."
+      title: "Unconscious Person",
+      description: "Check for breathing and pulse. If absent, start CPR. Place person in recovery position if breathing. Always call emergency services immediately."
     },
     {
-      title: "Stress Management",
-      description: "Practice mindfulness, deep breathing, or meditation regularly. Managing stress effectively reduces your risk of various health conditions and improves mental wellbeing."
+      title: "Poisoning Emergency",
+      description: "Call poison control immediately. Do not induce vomiting unless instructed. Keep the poison container for information. Get to emergency room fast."
+    },
+    {
+      title: "Stroke Symptoms",
+      description: "Remember FAST: Face drooping, Arm weakness, Speech difficulty, Time to call 108. Quick treatment can prevent permanent brain damage."
+    },
+    {
+      title: "Burn Treatment",
+      description: "Cool burns with running water for 10-20 minutes. Cover with clean cloth. For severe burns, call 108 immediately and do not remove clothing."
+    },
+    {
+      title: "Allergic Reaction",
+      description: "For severe allergic reactions, use epinephrine if available and call 108. Watch for swelling, difficulty breathing, or rapid pulse."
+    },
+    {
+      title: "Seizure Response",
+      description: "Clear area around person, place something soft under head, turn to side. Do not put anything in mouth. Call 108 for prolonged seizures."
+    },
+    {
+      title: "Emergency Kit",
+      description: "Keep first aid kit with bandages, antiseptic, pain relievers, emergency numbers, and any personal medications easily accessible at home."
     }
   ];
 
   const navigateTips = (direction: 'next' | 'prev') => {
     if (direction === 'next') {
-      setCurrentTipIndex((currentTipIndex + 1) % healthTips.length);
+      setCurrentTipIndex((currentTipIndex + 1) % emergencyTips.length);
     } else {
-      setCurrentTipIndex((currentTipIndex - 1 + healthTips.length) % healthTips.length);
+      setCurrentTipIndex((currentTipIndex - 1 + emergencyTips.length) % emergencyTips.length);
     }
   };
 
@@ -114,13 +134,13 @@ const PatientHomePage: React.FC = () => {
           ))}
         </div>
 
-        {/* Health Tips */}
-        <h2 className="text-xl font-semibold mb-4 text-care-dark">Health Tips</h2>
-        <Card className="mb-8 bg-gradient-to-br from-sky-50 to-cyan-50 relative">
+        {/* Emergency Tips */}
+        <h2 className="text-xl font-semibold mb-4 text-care-dark">Emergency Tips</h2>
+        <Card className="mb-8 bg-gradient-to-br from-red-50 to-orange-50 relative">
           <CardContent className="p-4">
-            <h3 className="font-medium text-care-dark mb-2">{healthTips[currentTipIndex].title}</h3>
+            <h3 className="font-medium text-care-dark mb-2">{emergencyTips[currentTipIndex].title}</h3>
             <p className="text-care-muted">
-              {healthTips[currentTipIndex].description}
+              {emergencyTips[currentTipIndex].description}
             </p>
             <div className="flex justify-between mt-4">
               <button 
@@ -131,7 +151,7 @@ const PatientHomePage: React.FC = () => {
                 <ChevronLeft className="h-5 w-5 text-care-primary" />
               </button>
               <div className="text-xs text-care-muted">
-                {currentTipIndex + 1} of {healthTips.length}
+                {currentTipIndex + 1} of {emergencyTips.length}
               </div>
               <button 
                 onClick={() => navigateTips('next')} 
