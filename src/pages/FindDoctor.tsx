@@ -6,7 +6,7 @@ import DoctorCard from '@/components/common/DoctorCard';
 import FilterButton from '@/components/common/FilterButton';
 import FilterChips from '@/components/common/FilterChips';
 import { Separator } from '@/components/ui/separator';
-import { Filter, SlidersHorizontal, Heart, Brain, Kidney, Stethoscope, Baby, Eye, Syringe, Lungs, Stomach, Users, Bone, Activity } from 'lucide-react';
+import { Filter, SlidersHorizontal, Heart, Brain, Droplets, Stethoscope, Baby, Eye, Syringe, Wind, CircleDot, Users, Bone, Activity } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -39,13 +39,13 @@ const specialties = [
 const specialtyCategories = [
   { id: 'dermatologist', label: 'Dermatologist', icon: Activity, color: 'bg-pink-100 text-pink-600' },
   { id: 'neurologist', label: 'Neurologist', icon: Brain, color: 'bg-purple-100 text-purple-600' },
-  { id: 'nephrologist', label: 'Nephrologist', icon: Kidney, color: 'bg-red-100 text-red-600' },
+  { id: 'nephrologist', label: 'Nephrologist', icon: Droplets, color: 'bg-red-100 text-red-600' },
   { id: 'cardiologist', label: 'Cardiologist', icon: Heart, color: 'bg-red-100 text-red-600' },
   { id: 'pediatrician', label: 'Pediatrician', icon: Baby, color: 'bg-orange-100 text-orange-600' },
   { id: 'general', label: 'General Physician', icon: Stethoscope, color: 'bg-blue-100 text-blue-600' },
   { id: 'orthopedic', label: 'Orthopedician', icon: Bone, color: 'bg-green-100 text-green-600' },
-  { id: 'pulmonologist', label: 'Pulmonologist', icon: Lungs, color: 'bg-teal-100 text-teal-600' },
-  { id: 'gastroenterologist', label: 'Gastroenterologist', icon: Stomach, color: 'bg-yellow-100 text-yellow-600' },
+  { id: 'pulmonologist', label: 'Pulmonologist', icon: Wind, color: 'bg-teal-100 text-teal-600' },
+  { id: 'gastroenterologist', label: 'Gastroenterologist', icon: CircleDot, color: 'bg-yellow-100 text-yellow-600' },
   { id: 'ophthalmologist', label: 'Ophthalmologist', icon: Eye, color: 'bg-indigo-100 text-indigo-600' },
   { id: 'endocrinologist', label: 'Endocrinologist', icon: Syringe, color: 'bg-cyan-100 text-cyan-600' },
   { id: 'psychiatrist', label: 'Psychiatrist', icon: Brain, color: 'bg-violet-100 text-violet-600' },
