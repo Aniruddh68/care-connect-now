@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Doctor, DoctorSchedule, TimeSlot, Appointment } from '@/types/doctor';
+import { DoctorSchedule, TimeSlot, Appointment } from '@/types/doctor';
 import { useAdmin } from '@/context/AdminContext';
+import { useDoctorStore, Doctor } from '@/services/doctorService';
 
 // Sample data for doctors with updated names
 const initialDoctors: Doctor[] = [
@@ -156,28 +157,30 @@ export const useAdminDoctors = () => {
   const initialAppointments = generateInitialAppointments(initialSchedules);
 
   const { setSystemStatus } = useAdmin();
-  const [doctors, setDoctors] = useState<Doctor[]>(initialDoctors);
+  const { 
+    doctors, 
+    addDoctor: addDoctorToStore, 
+    updateDoctorStatus: updateDoctorStatusInStore,
+    setLoading: setStoreLoading 
+  } = useDoctorStore();
+  
   const [schedules, setSchedules] = useState<DoctorSchedule[]>(initialSchedules);
   const [appointments, setAppointments] = useState<Appointment[]>(initialAppointments);
   const [isLoading, setIsLoading] = useState(false);
 
   const addDoctor = (doctor: Omit<Doctor, 'id'>) => {
     setIsLoading(true);
+    setStoreLoading(true);
     setSystemStatus('syncing');
     
     // Simulate API delay
     setTimeout(() => {
-      const newId = `d${doctors.length + 1}`;
-      const newDoctor: Doctor = {
-        ...doctor,
-        id: newId,
-      };
-      
-      setDoctors([...doctors, newDoctor]);
+      addDoctorToStore(doctor);
       
       // Create initial schedules for the new doctor
       const today = new Date();
       const newSchedules = [];
+      const newId = `d${doctors.length + 1}`;
       
       for (let i = 0; i < 7; i++) {
         const date = new Date();
@@ -194,20 +197,20 @@ export const useAdminDoctors = () => {
       
       setSchedules([...schedules, ...newSchedules]);
       setIsLoading(false);
+      setStoreLoading(false);
       setSystemStatus('online');
     }, 1000);
   };
 
   const updateDoctorStatus = (doctorId: string, status: 'active' | 'inactive') => {
     setIsLoading(true);
+    setStoreLoading(true);
     setSystemStatus('syncing');
     
     setTimeout(() => {
-      const updatedDoctors = doctors.map(doctor => 
-        doctor.id === doctorId ? { ...doctor, status } : doctor
-      );
-      setDoctors(updatedDoctors);
+      updateDoctorStatusInStore(doctorId, status);
       setIsLoading(false);
+      setStoreLoading(false);
       setSystemStatus('online');
     }, 1000);
   };
