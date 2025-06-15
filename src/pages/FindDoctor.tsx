@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import Searchbar from '@/components/common/Searchbar';
@@ -78,18 +77,26 @@ const FindDoctorPage: React.FC = () => {
   const { getActiveDoctors } = useDoctorStore();
   const activeDoctors = getActiveDoctors();
   
+  console.log('Active doctors:', activeDoctors);
+  console.log('Selected specialty filter:', selectedSpecialtyFilter);
+  console.log('Selected specialties:', selectedSpecialties);
+  
   const filteredDoctors = activeDoctors.filter(doctor => {
+    console.log('Filtering doctor:', doctor.name, 'specialty:', doctor.specialty);
+    
     // If a specific specialty is selected from the grid, filter by that
     if (selectedSpecialtyFilter) {
-      if (!doctor.specialty.toLowerCase().includes(selectedSpecialtyFilter.toLowerCase())) {
-        return false;
-      }
+      const matches = doctor.specialty.toLowerCase().includes(selectedSpecialtyFilter.toLowerCase());
+      console.log('Specialty filter match:', matches);
+      return matches;
     } else if (!selectedSpecialties.includes('all')) {
       // Check if doctor's specialty matches any selected specialty
       const doctorSpecialtyLower = doctor.specialty.toLowerCase();
       const matchesSpecialty = selectedSpecialties.some(specialtyId => {
         const specialty = specialties.find(s => s.id === specialtyId);
-        return specialty && doctorSpecialtyLower.includes(specialty.label.toLowerCase());
+        const matches = specialty && doctorSpecialtyLower.includes(specialty.label.toLowerCase());
+        console.log('Checking specialty:', specialty?.label, 'matches:', matches);
+        return matches;
       });
       if (!matchesSpecialty) {
         return false;
@@ -110,6 +117,8 @@ const FindDoctorPage: React.FC = () => {
     return true;
   });
   
+  console.log('Filtered doctors:', filteredDoctors);
+  
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.trim()) {
@@ -121,9 +130,11 @@ const FindDoctorPage: React.FC = () => {
   const handleSpecialtyClick = (specialtyId: string) => {
     const specialty = specialtyCategories.find(s => s.id === specialtyId);
     if (specialty) {
+      console.log('Specialty clicked:', specialty.specialty);
       setSelectedSpecialtyFilter(specialty.specialty);
       setShowDoctorList(true);
       setSearchQuery('');
+      setSelectedSpecialties(['all']); // Reset other filters
     }
   };
   
@@ -166,6 +177,7 @@ const FindDoctorPage: React.FC = () => {
         ) : (
           // Doctor List View
           <div className="grid grid-cols-1 lg:grid-cols-[300px,1fr] gap-6">
+            {/* ... keep existing code (sidebar) */}
             <aside className="hidden lg:block bg-white rounded-lg shadow-sm p-6 h-fit sticky top-20">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold">Filter Doctors</h3>
