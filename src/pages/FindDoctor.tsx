@@ -37,18 +37,18 @@ const specialties = [
 ];
 
 const specialtyCategories = [
-  { id: 'dermatologist', label: 'Dermatologist', icon: Activity, color: 'bg-pink-100 text-pink-600' },
-  { id: 'neurologist', label: 'Neurologist', icon: Brain, color: 'bg-purple-100 text-purple-600' },
-  { id: 'nephrologist', label: 'Nephrologist', icon: Droplets, color: 'bg-red-100 text-red-600' },
-  { id: 'cardiologist', label: 'Cardiologist', icon: Heart, color: 'bg-red-100 text-red-600' },
-  { id: 'pediatrician', label: 'Pediatrician', icon: Baby, color: 'bg-orange-100 text-orange-600' },
-  { id: 'general', label: 'General Physician', icon: Stethoscope, color: 'bg-blue-100 text-blue-600' },
-  { id: 'orthopedic', label: 'Orthopedician', icon: Bone, color: 'bg-green-100 text-green-600' },
-  { id: 'pulmonologist', label: 'Pulmonologist', icon: Wind, color: 'bg-teal-100 text-teal-600' },
-  { id: 'gastroenterologist', label: 'Gastroenterologist', icon: CircleDot, color: 'bg-yellow-100 text-yellow-600' },
-  { id: 'ophthalmologist', label: 'Ophthalmologist', icon: Eye, color: 'bg-indigo-100 text-indigo-600' },
-  { id: 'endocrinologist', label: 'Endocrinologist', icon: Syringe, color: 'bg-cyan-100 text-cyan-600' },
-  { id: 'psychiatrist', label: 'Psychiatrist', icon: Brain, color: 'bg-violet-100 text-violet-600' },
+  { id: 'dermatologist', label: 'Dermatologist', icon: Activity, color: 'bg-pink-100 text-pink-600', specialty: 'Dermatologist' },
+  { id: 'neurologist', label: 'Neurologist', icon: Brain, color: 'bg-purple-100 text-purple-600', specialty: 'Neurologist' },
+  { id: 'nephrologist', label: 'Nephrologist', icon: Droplets, color: 'bg-red-100 text-red-600', specialty: 'Nephrologist' },
+  { id: 'cardiologist', label: 'Cardiologist', icon: Heart, color: 'bg-red-100 text-red-600', specialty: 'Cardiologist' },
+  { id: 'pediatrician', label: 'Pediatrician', icon: Baby, color: 'bg-orange-100 text-orange-600', specialty: 'Pediatrician' },
+  { id: 'general', label: 'General Physician', icon: Stethoscope, color: 'bg-blue-100 text-blue-600', specialty: 'General Physician' },
+  { id: 'orthopedic', label: 'Orthopedician', icon: Bone, color: 'bg-green-100 text-green-600', specialty: 'Orthopedic' },
+  { id: 'pulmonologist', label: 'Pulmonologist', icon: Wind, color: 'bg-teal-100 text-teal-600', specialty: 'Pulmonologist' },
+  { id: 'gastroenterologist', label: 'Gastroenterologist', icon: CircleDot, color: 'bg-yellow-100 text-yellow-600', specialty: 'Gastroenterologist' },
+  { id: 'ophthalmologist', label: 'Ophthalmologist', icon: Eye, color: 'bg-indigo-100 text-indigo-600', specialty: 'Ophthalmologist' },
+  { id: 'endocrinologist', label: 'Endocrinologist', icon: Syringe, color: 'bg-cyan-100 text-cyan-600', specialty: 'Endocrinologist' },
+  { id: 'psychiatrist', label: 'Psychiatrist', icon: Brain, color: 'bg-violet-100 text-violet-600', specialty: 'Psychiatrist' },
 ];
 
 const availability = [
@@ -71,6 +71,7 @@ const FindDoctorPage: React.FC = () => {
   const [selectedDistance, setSelectedDistance] = useState<string[]>(['any']);
   const [searchQuery, setSearchQuery] = useState('');
   const [showDoctorList, setShowDoctorList] = useState(false);
+  const [selectedSpecialtyFilter, setSelectedSpecialtyFilter] = useState<string>('');
   const isMobile = useIsMobile();
   
   // Use the centralized doctor store
@@ -78,9 +79,21 @@ const FindDoctorPage: React.FC = () => {
   const activeDoctors = getActiveDoctors();
   
   const filteredDoctors = activeDoctors.filter(doctor => {
-    if (!selectedSpecialties.includes('all') && 
-        !selectedSpecialties.some(s => doctor.specialty.toLowerCase().includes(s))) {
-      return false;
+    // If a specific specialty is selected from the grid, filter by that
+    if (selectedSpecialtyFilter) {
+      if (!doctor.specialty.toLowerCase().includes(selectedSpecialtyFilter.toLowerCase())) {
+        return false;
+      }
+    } else if (!selectedSpecialties.includes('all')) {
+      // Check if doctor's specialty matches any selected specialty
+      const doctorSpecialtyLower = doctor.specialty.toLowerCase();
+      const matchesSpecialty = selectedSpecialties.some(specialtyId => {
+        const specialty = specialties.find(s => s.id === specialtyId);
+        return specialty && doctorSpecialtyLower.includes(specialty.label.toLowerCase());
+      });
+      if (!matchesSpecialty) {
+        return false;
+      }
     }
     
     if (selectedAvailability.includes('today') && !doctor.availableToday) {
@@ -101,15 +114,16 @@ const FindDoctorPage: React.FC = () => {
     setSearchQuery(query);
     if (query.trim()) {
       setShowDoctorList(true);
+      setSelectedSpecialtyFilter('');
     }
   };
 
   const handleSpecialtyClick = (specialtyId: string) => {
     const specialty = specialtyCategories.find(s => s.id === specialtyId);
     if (specialty) {
-      setSearchQuery(specialty.label);
-      setSelectedSpecialties([specialtyId]);
+      setSelectedSpecialtyFilter(specialty.specialty);
       setShowDoctorList(true);
+      setSearchQuery('');
     }
   };
   
@@ -156,7 +170,11 @@ const FindDoctorPage: React.FC = () => {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold">Filter Doctors</h3>
                 <button 
-                  onClick={() => setShowDoctorList(false)}
+                  onClick={() => {
+                    setShowDoctorList(false);
+                    setSelectedSpecialtyFilter('');
+                    setSearchQuery('');
+                  }}
                   className="text-care-primary text-sm hover:underline"
                 >
                   Back to Categories
@@ -214,7 +232,11 @@ const FindDoctorPage: React.FC = () => {
                   </div>
                   
                   <button 
-                    onClick={() => setShowDoctorList(false)}
+                    onClick={() => {
+                      setShowDoctorList(false);
+                      setSelectedSpecialtyFilter('');
+                      setSearchQuery('');
+                    }}
                     className="px-4 py-2 text-care-primary bg-white border border-gray-200 rounded-lg hover:bg-gray-50 text-sm"
                   >
                     Categories
@@ -297,13 +319,16 @@ const FindDoctorPage: React.FC = () => {
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold text-care-dark">
                     {filteredDoctors.length} Doctors Found in Bhopal
+                    {selectedSpecialtyFilter && (
+                      <span className="text-care-primary ml-2">- {selectedSpecialtyFilter}</span>
+                    )}
                   </h2>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                   {filteredDoctors.length > 0 ? (
                     filteredDoctors.map(doctor => (
-                      <DoctorCard key={doctor.id} doctor={doctor} />
+                      <DoctorCard key={doctor.id} doctor={doctor} showBookButton={true} />
                     ))
                   ) : (
                     <div className="col-span-full text-center py-8">
