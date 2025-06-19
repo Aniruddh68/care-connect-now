@@ -1,12 +1,12 @@
+
 import React, { useState } from "react";
 import MainLayout from "@/components/layout/MainLayout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Edit2, Save } from "lucide-react";
+import { Edit2, Save, X } from "lucide-react";
 import { 
   Form,
   FormControl,
@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { useUser } from "@/context/UserContext";
 
 interface ProfileFormValues {
+  fullName: string;
   email: string;
   phone: string;
   address: string;
@@ -27,9 +28,10 @@ interface ProfileFormValues {
 const ProfileSettings = () => {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
-  const { user } = useUser();
+  const { user, login } = useUser();
   
   const defaultValues: ProfileFormValues = {
+    fullName: user?.fullName || "",
     email: user?.email || "",
     phone: "+91 98765 43210",
     address: "123 Main St, Bhopal, Madhya Pradesh",
@@ -41,6 +43,16 @@ const ProfileSettings = () => {
   });
   
   const handleSave = (values: ProfileFormValues) => {
+    // Update the user context with new values
+    if (user) {
+      const updatedUser = {
+        ...user,
+        fullName: values.fullName,
+        email: values.email,
+      };
+      login(updatedUser);
+    }
+    
     setIsEditing(false);
     console.log("Saved values:", values);
     toast({
@@ -49,11 +61,9 @@ const ProfileSettings = () => {
     });
   };
   
-  const toggleEditMode = () => {
-    if (isEditing) {
-      form.reset(defaultValues);
-    }
-    setIsEditing(!isEditing);
+  const handleCancel = () => {
+    form.reset(defaultValues);
+    setIsEditing(false);
   };
 
   return (
@@ -64,28 +74,68 @@ const ProfileSettings = () => {
           <CardHeader className="flex flex-col sm:flex-row items-center sm:items-start sm:justify-between gap-4">
             <div className="flex items-center gap-4">
               <Avatar className="h-20 w-20 border-2 border-care-primary">
-                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user?.fullName}`} alt={user?.fullName} />
-                <AvatarFallback>{user?.fullName ? user.fullName.split(' ').map(n => n[0]).join('') : 'AG'}</AvatarFallback>
+                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${form.watch('fullName')}`} alt={form.watch('fullName')} />
+                <AvatarFallback>{form.watch('fullName') ? form.watch('fullName').split(' ').map(n => n[0]).join('') : 'AG'}</AvatarFallback>
               </Avatar>
               <div>
-                <h2 className="text-xl font-bold break-all">{user?.fullName}</h2>
+                <h2 className="text-xl font-bold break-all">{form.watch('fullName')}</h2>
                 <p className="text-care-muted text-xs sm:text-sm">Patient ID: BPL20245678</p>
               </div>
             </div>
-            <Button
-              variant={isEditing ? "outline" : "ghost"}
-              size="icon"
-              className="mt-2 sm:mt-0 self-end"
-              onClick={toggleEditMode}
-              aria-label={isEditing ? "Cancel editing" : "Edit profile"}
-            >
-              {isEditing ? <Save className="h-5 w-5" /> : <Edit2 className="h-5 w-5" />}
-            </Button>
+            <div className="flex gap-2">
+              {isEditing ? (
+                <>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={handleCancel}
+                    aria-label="Cancel editing"
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                  <Button
+                    type="submit"
+                    size="icon"
+                    form="profile-form"
+                    aria-label="Save changes"
+                  >
+                    <Save className="h-5 w-5" />
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsEditing(true)}
+                  aria-label="Edit profile"
+                >
+                  <Edit2 className="h-5 w-5" />
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleSave)} className="space-y-6">
+              <form id="profile-form" onSubmit={form.handleSubmit(handleSave)} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="fullName"
+                    render={({ field }) => (
+                      <FormItem className="sm:col-span-2">
+                        <FormLabel>Full Name</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            readOnly={!isEditing}
+                            className={!isEditing ? "bg-gray-50" : ""}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
                   <FormField
                     control={form.control}
                     name="email"
@@ -163,7 +213,7 @@ const ProfileSettings = () => {
                     <Button 
                       type="button" 
                       variant="outline" 
-                      onClick={toggleEditMode}
+                      onClick={handleCancel}
                     >
                       Cancel
                     </Button>
