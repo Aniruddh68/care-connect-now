@@ -82,38 +82,37 @@ const FindDoctorPage: React.FC = () => {
   console.log('Selected specialties:', selectedSpecialties);
   
   const filteredDoctors = activeDoctors.filter(doctor => {
-    console.log('Filtering doctor:', doctor.name, 'specialty:', doctor.specialty);
-    
     // If a specific specialty is selected from the grid, filter by that
     if (selectedSpecialtyFilter) {
       const matches = doctor.specialty.toLowerCase().includes(selectedSpecialtyFilter.toLowerCase());
-      console.log('Specialty filter match:', matches);
       return matches;
-    } else if (!selectedSpecialties.includes('all')) {
-      // Check if doctor's specialty matches any selected specialty
+    }
+
+    // Check specialty filter chips (only if not "all")
+    if (!selectedSpecialties.includes('all')) {
       const doctorSpecialtyLower = doctor.specialty.toLowerCase();
       const matchesSpecialty = selectedSpecialties.some(specialtyId => {
         const specialty = specialties.find(s => s.id === specialtyId);
-        const matches = specialty && doctorSpecialtyLower.includes(specialty.label.toLowerCase());
-        console.log('Checking specialty:', specialty?.label, 'matches:', matches);
-        return matches;
+        return specialty && doctorSpecialtyLower.includes(specialty.label.toLowerCase());
       });
       if (!matchesSpecialty) {
         return false;
       }
     }
-    
-    if (selectedAvailability.includes('today') && !doctor.availableToday) {
+
+    // Check availability (only if specifically filtering for "today")
+    if (selectedAvailability.includes('today') && !selectedAvailability.includes('any') && !doctor.availableToday) {
       return false;
     }
-    
-    if (searchQuery && 
-        !doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
+
+    // Check search query
+    if (searchQuery &&
+        !doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
         !doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase()) &&
         !doctor.hospital.toLowerCase().includes(searchQuery.toLowerCase())) {
       return false;
     }
-    
+
     return true;
   });
   
