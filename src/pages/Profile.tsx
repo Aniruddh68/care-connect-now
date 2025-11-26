@@ -150,6 +150,11 @@ const Profile = () => {
           title: "Document uploaded",
           description: `${file.name} has been added to your medical documents.`,
         });
+        
+        // Reset file input to allow selecting the same file again
+        if (documentInputRef.current) {
+          documentInputRef.current.value = '';
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -467,7 +472,6 @@ const Profile = () => {
                   type="button"
                   size="sm"
                   onClick={() => documentInputRef.current?.click()}
-                  disabled={!isEditing}
                 >
                   <Upload className="h-4 w-4 mr-2" />
                   Upload
