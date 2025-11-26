@@ -117,7 +117,7 @@ const Payment = () => {
   return (
     <MainLayout title="Payment">
       <div className="max-w-3xl mx-auto px-4 pt-6 pb-20">
-        <h1 className="text-2xl font-bold mb-6 text-care-dark">Make a Payment</h1>
+        <h1 className="text-2xl font-bold mb-6 text-foreground">Make a Payment</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           <div className="md:col-span-3 space-y-6">
@@ -130,21 +130,21 @@ const Payment = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div 
                     className={`border rounded-lg p-4 flex flex-col items-center cursor-pointer transition-colors ${
-                      paymentMode === 'upi' ? 'border-care-primary bg-sky-50' : 'border-gray-200'
+                      paymentMode === 'upi' ? 'border-primary bg-primary/10' : 'border-border'
                     }`}
                     onClick={() => setPaymentMode('upi')}
                   >
-                    <WalletIcon className="h-6 w-6 text-care-primary mb-2" />
+                    <WalletIcon className="h-6 w-6 text-primary mb-2" />
                     <span className="text-sm font-medium">UPI Direct</span>
                   </div>
                   
                   <div 
                     className={`border rounded-lg p-4 flex flex-col items-center cursor-pointer transition-colors ${
-                      paymentMode === 'qr' ? 'border-care-primary bg-sky-50' : 'border-gray-200'
+                      paymentMode === 'qr' ? 'border-primary bg-primary/10' : 'border-border'
                     }`}
                     onClick={() => setPaymentMode('qr')}
                   >
-                    <QrCodeIcon className="h-6 w-6 text-care-primary mb-2" />
+                    <QrCodeIcon className="h-6 w-6 text-primary mb-2" />
                     <span className="text-sm font-medium">Scan QR</span>
                   </div>
                 </div>
@@ -239,7 +239,7 @@ const Payment = () => {
               <CardFooter>
                 <Button 
                   onClick={handlePayment} 
-                  className="w-full bg-care-primary hover:bg-sky-600 text-white"
+                  className="w-full"
                 >
                   Pay Now
                 </Button>
@@ -255,16 +255,16 @@ const Payment = () => {
               <CardContent className="flex flex-col items-center">
                 {paymentMode === 'upi' ? (
                   <div className="text-center">
-                    <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                      <p className="font-medium text-care-dark break-all">
+                    <div className="bg-muted p-4 rounded-lg mb-4">
+                      <p className="font-medium text-foreground break-all">
                         {upiApp === 'custom' && customUpiId ? customUpiId : upiId}
                       </p>
                     </div>
-                    <p className="text-sm text-gray-500">Use this UPI ID in your payment app</p>
+                    <p className="text-sm text-muted-foreground">Use this UPI ID in your payment app</p>
                   </div>
                 ) : (
                   <div className="text-center">
-                    <div className="bg-white border-2 border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-center">
+                    <div className="bg-card border-2 border-border rounded-lg p-4 mb-4 flex items-center justify-center">
                       <QRCodeSVG 
                         value={getPaymentUrl()}
                         size={160}
@@ -274,7 +274,7 @@ const Payment = () => {
                         includeMargin={false}
                       />
                     </div>
-                    <p className="text-sm text-gray-500">Scan this QR code with any UPI app</p>
+                    <p className="text-sm text-muted-foreground">Scan this QR code with any UPI app</p>
                   </div>
                 )}
               </CardContent>
