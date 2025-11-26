@@ -43,7 +43,7 @@ interface MedicalDocument {
 const Profile = () => {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
-  const { user } = useUser();
+  const { user, login } = useUser();
   const [profilePhoto, setProfilePhoto] = useState<string>(() => {
     return localStorage.getItem('careconnect_profilePhoto') || '';
   });
@@ -72,6 +72,7 @@ const Profile = () => {
   });
   
   const handleSave = (data: ProfileFormData) => {
+    // Update localStorage for profile fields
     localStorage.setItem('careconnect_phone', data.phone);
     localStorage.setItem('careconnect_address', data.address);
     localStorage.setItem('careconnect_dob', data.dob);
@@ -80,6 +81,16 @@ const Profile = () => {
     localStorage.setItem('careconnect_chronicConditions', data.chronicConditions);
     localStorage.setItem('careconnect_currentMedications', data.currentMedications);
     localStorage.setItem('careconnect_profileNotes', data.notes);
+    
+    // Update UserContext if fullName or email changed
+    if (user && (user.fullName !== data.fullName || user.email !== data.email)) {
+      const updatedUser = {
+        ...user,
+        fullName: data.fullName,
+        email: data.email,
+      };
+      login(updatedUser);
+    }
     
     setIsEditing(false);
     toast({
