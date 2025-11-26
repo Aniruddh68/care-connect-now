@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Edit2, Save, X, Camera } from 'lucide-react';
+import { Edit2, Save, X, Camera, Upload, FileText, Trash2, Eye } from 'lucide-react';
 import { useUser } from '@/context/UserContext';
 import { 
   Form,
@@ -31,6 +31,15 @@ interface ProfileFormData {
   notes: string;
 }
 
+interface MedicalDocument {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  uploadDate: string;
+  data: string;
+}
+
 const Profile = () => {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
@@ -38,7 +47,12 @@ const Profile = () => {
   const [profilePhoto, setProfilePhoto] = useState<string>(() => {
     return localStorage.getItem('careconnect_profilePhoto') || '';
   });
+  const [medicalDocuments, setMedicalDocuments] = useState<MedicalDocument[]>(() => {
+    const stored = localStorage.getItem('careconnect_medicalDocuments');
+    return stored ? JSON.parse(stored) : [];
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const documentInputRef = useRef<HTMLInputElement>(null);
   
   const defaultValues: ProfileFormData = {
     fullName: user?.fullName || '',
@@ -105,6 +119,78 @@ const Profile = () => {
     setIsEditing(false);
   };
   
+  const handleDocumentUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "Please select a file smaller than 10MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const newDocument: MedicalDocument = {
+          id: Date.now().toString(),
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          uploadDate: new Date().toISOString(),
+          data: reader.result as string,
+        };
+        
+        const updatedDocuments = [...medicalDocuments, newDocument];
+        setMedicalDocuments(updatedDocuments);
+        localStorage.setItem('careconnect_medicalDocuments', JSON.stringify(updatedDocuments));
+        
+        toast({
+          title: "Document uploaded",
+          description: `${file.name} has been added to your medical documents.`,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDocumentDelete = (documentId: string) => {
+    const updatedDocuments = medicalDocuments.filter(doc => doc.id !== documentId);
+    setMedicalDocuments(updatedDocuments);
+    localStorage.setItem('careconnect_medicalDocuments', JSON.stringify(updatedDocuments));
+    
+    toast({
+      title: "Document deleted",
+      description: "The document has been removed from your profile.",
+    });
+  };
+
+  const handleDocumentPreview = (document: MedicalDocument) => {
+    const newWindow = window.open();
+    if (newWindow) {
+      if (document.type.startsWith('image/')) {
+        newWindow.document.write(`<img src="${document.data}" alt="${document.name}" style="max-width: 100%; height: auto;" />`);
+      } else if (document.type === 'application/pdf') {
+        newWindow.location.href = document.data;
+      } else {
+        const link = newWindow.document.createElement('a');
+        link.href = document.data;
+        link.download = document.name;
+        newWindow.document.body.appendChild(link);
+        link.click();
+      }
+    }
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  };
+
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('');
   };
@@ -371,6 +457,74 @@ const Profile = () => {
                     )}
                   />
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <h3 className="text-lg font-semibold">Medical Documents & Test Reports</h3>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => documentInputRef.current?.click()}
+                  disabled={!isEditing}
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Upload
+                </Button>
+                <input
+                  ref={documentInputRef}
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                  className="hidden"
+                  onChange={handleDocumentUpload}
+                />
+              </CardHeader>
+              <CardContent>
+                {medicalDocuments.length === 0 ? (
+                  <p className="text-muted-foreground text-sm text-center py-4">
+                    No documents uploaded yet. Click Upload to add medical documents or test reports.
+                  </p>
+                ) : (
+                  <div className="space-y-2">
+                    {medicalDocuments.map((doc) => (
+                      <div
+                        key={doc.id}
+                        className="flex items-center justify-between p-3 border rounded-lg bg-muted/30"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <FileText className="h-5 w-5 text-primary flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-sm truncate">{doc.name}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {formatFileSize(doc.size)} • {new Date(doc.uploadDate).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex gap-1 flex-shrink-0">
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => handleDocumentPreview(doc)}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          {isEditing && (
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => handleDocumentDelete(doc.id)}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </form>
