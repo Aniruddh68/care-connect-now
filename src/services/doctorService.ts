@@ -967,7 +967,12 @@ export const useDoctorStore = create<DoctorStore>()(
       }
     }),
     {
-      name: 'doctor-storage'
+      name: 'doctor-storage',
+      version: 2,
+      migrate: () => {
+        // Reset to initial doctors on version change
+        return { doctors: initialDoctors, isLoading: false };
+      }
     }
   )
 );
