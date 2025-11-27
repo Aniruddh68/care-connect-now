@@ -65,8 +65,18 @@ const FindDoctorPage: React.FC = () => {
     }
 
     // Filter by availability
-    if (selectedAvailability === 'today' && !doctor.availableToday) {
-      return false;
+    if (selectedAvailability === 'today') {
+      if (!doctor.availableToday) return false;
+    } else if (selectedAvailability === 'tomorrow') {
+      if (doctor.availableToday) return false; // Available today, not tomorrow
+      if (!doctor.nextAvailable?.toLowerCase().includes('tomorrow')) return false;
+    } else if (selectedAvailability === 'week') {
+      // Show doctors available this week (today, tomorrow, or within the week)
+      const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      const isThisWeek = doctor.availableToday || 
+        doctor.nextAvailable?.toLowerCase().includes('tomorrow') ||
+        weekDays.some(day => doctor.nextAvailable?.toLowerCase().includes(day));
+      if (!isThisWeek) return false;
     }
 
     // Filter by search query
