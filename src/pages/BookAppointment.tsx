@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { useAppointmentStore } from '@/services/appointmentService';
 import { useDoctorStore } from '@/services/doctorService';
+import { supabase } from '@/integrations/supabase/client';
 
 const BookAppointmentPage: React.FC = () => {
   const { doctorId } = useParams<{ doctorId: string }>();
@@ -20,16 +21,27 @@ const BookAppointmentPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [reason, setReason] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('9752353580');
+  const [isBooking, setIsBooking] = useState(false);
 
   const availableTimes = [
     "09:00 AM", "10:00 AM", "11:00 AM", "02:00 PM", "03:00 PM", "04:00 PM"
   ];
 
-  const handleBooking = () => {
+  const handleBooking = async () => {
     if (!selectedDate || !selectedTime) {
       toast({
         title: "Missing Information",
         description: "Please select a date and time for your appointment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!phoneNumber || phoneNumber.length < 10) {
+      toast({
+        title: "Phone Number Required",
+        description: "Please enter a valid phone number for SMS confirmation.",
         variant: "destructive",
       });
       return;
@@ -45,22 +57,56 @@ const BookAppointmentPage: React.FC = () => {
       return;
     }
 
-    addAppointment({
-      doctorName: doctor.name,
-      doctorSpecialty: doctor.specialty,
-      doctorImage: doctor.imageUrl,
-      hospital: doctor.hospital,
-      date: selectedDate,
-      time: selectedTime,
-      status: 'upcoming',
-      reason: reason,
-    });
+    setIsBooking(true);
 
-    toast({
-      title: "Appointment Booked",
-      description: "Your appointment has been successfully booked.",
-    });
-    navigate('/appointments');
+    try {
+      // Add appointment
+      addAppointment({
+        doctorName: doctor.name,
+        doctorSpecialty: doctor.specialty,
+        doctorImage: doctor.imageUrl,
+        hospital: doctor.hospital,
+        date: selectedDate,
+        time: selectedTime,
+        status: 'upcoming',
+        reason: reason,
+      });
+
+      // Send SMS notification
+      const { data, error } = await supabase.functions.invoke('send-sms', {
+        body: {
+          phoneNumber,
+          doctorName: doctor.name,
+          appointmentDate: format(selectedDate, 'EEEE, MMMM d, yyyy'),
+          appointmentTime: selectedTime,
+          hospital: doctor.hospital,
+        },
+      });
+
+      if (error) {
+        console.error('SMS error:', error);
+        toast({
+          title: "Appointment Booked",
+          description: "Appointment booked but SMS notification failed.",
+        });
+      } else {
+        toast({
+          title: "Appointment Booked!",
+          description: `Confirmation SMS sent to ${phoneNumber}`,
+        });
+      }
+
+      navigate('/appointments');
+    } catch (error) {
+      console.error('Booking error:', error);
+      toast({
+        title: "Appointment Booked",
+        description: "Your appointment was booked successfully.",
+      });
+      navigate('/appointments');
+    } finally {
+      setIsBooking(false);
+    }
   };
 
   if (!doctor) {
@@ -123,6 +169,23 @@ const BookAppointmentPage: React.FC = () => {
           </div>
 
           <div className="mb-4">
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+              Phone Number (for SMS confirmation) *
+            </label>
+            <div className="mt-1 flex items-center">
+              <Phone className="h-4 w-4 mr-2 text-care-muted" />
+              <input
+                id="phone"
+                type="tel"
+                placeholder="Enter your phone number"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3 border"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="mb-4">
             <label htmlFor="reason" className="block text-sm font-medium text-gray-700">
               Reason for Appointment (Optional)
             </label>
@@ -160,8 +223,12 @@ const BookAppointmentPage: React.FC = () => {
             </div>
           </div>
 
-          <button onClick={handleBooking} className="primary-button w-full py-3">
-            Book Appointment
+          <button 
+            onClick={handleBooking} 
+            className="primary-button w-full py-3"
+            disabled={isBooking}
+          >
+            {isBooking ? 'Booking...' : 'Book Appointment'}
           </button>
         </div>
       </div>
