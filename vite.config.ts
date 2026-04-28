@@ -19,8 +19,4 @@ export default defineConfig(({ mode }) => ({
     },
   },
 
-  // 🔥 IMPORTANT: Change Vite output folder from "dist" → "build"
-  build: {
-    outDir: "build",
-  },
 }));
